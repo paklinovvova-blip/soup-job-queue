@@ -66,6 +66,28 @@ The tests use Testcontainers, so Docker must be running. They cover:
 - a check that lease code never reads the wall clock;
 - one test per seeded bug.
 
+## Chaos test
+
+```bash
+mvn -q -DskipTests package
+java -jar chaos-harness/target/chaos-harness.jar --jobs 10000 --seed 1
+```
+
+Each run recreates the stack (`docker compose down -v`, then `up`), and then:
+
+- submits the jobs at 15 per second, with concurrent duplicates, delayed retries, conflicting resends and cancels (half of the cancels go to running jobs);
+- SIGKILLs a worker about every 2 s and pauses one past its lease about every 15 s, until 95% of the jobs are finished;
+- checks invariants I1–I10.
+
+The raw output goes to `runs/<UTC>-<mode>-seed<seed>.log`, which is never overwritten. Exit code:
+
+- `0`: expectation met;
+- `2`: inconclusive, the faults did not reach the dangerous paths;
+- `1`: an invariant failed, or a mutant was not caught.
+
+Other options: `--mutant naive-claim|no-fencing|worker-clock-lease` (a seeded-bug run that must fail),
+`--mode load --rps 100 --duration 5m` (load run with pre-registered SHIP criteria), and `--help` for all flags.
+
 ## Seeded bugs (mutant modes)
 
 `QUEUE_MUTANT` deliberately disables one protection, to prove the chaos checks can see it. Never set it in production.

@@ -1,0 +1,36 @@
+
+==== RUN ===================================================================
+config:   Config[mode=load, mutant=none, jobs=10000, rate=15.0, seed=1, workers=8, killEvery=PT2S, pauseEvery=PT15S, lease=PT5S, timeout=PT15M, faultWindow=0.95, fresh=true, dryRun=false, api=http://localhost:8080, dbUrl=jdbc:postgresql://localhost:55432/queue, dbUser=queue, dbPassword=queue, runsDir=runs/dev, loadRps=20, loadDuration=PT30S, loadMix=default]
+revision: fc96113-dirty
+note:     the seed fixes the workload and the fault schedule; thread scheduling and timing are not reproducible
+[    0.1s] docker compose down -v
+[    1.7s] docker compose up --scale worker=8 (QUEUE_MUTANT=none)
+[   10.7s] workers started: 8 of 8
+[   10.7s] schema check: effects primary key present=true, expected=true
+
+==== LOAD ==================================================================
+[   10.7s] open loop: 20 requests/s for 30000ms, mix 20% create / 60% get / 15% list / 5% cancel
+
+==== LOAD RESULTS ==========================================================
+create  n=136    p50=   9.9ms p95=  13.7ms p99=  19.8ms max=   24.6ms errors=0
+get     n=348    p50=   7.3ms p95=  11.6ms p99=  15.0ms max=   23.6ms errors=0
+list    n=91     p50=   8.4ms p95=  13.2ms p99=  42.4ms max=   42.4ms errors=0
+cancel  n=25     p50=   9.5ms p95=  15.7ms p99=  21.7ms max=   21.7ms errors=0
+all     n=600    p50=   7.9ms p95=  12.8ms p99=  15.9ms errors=0 (0.000%) achieved=20.0 req/s
+
+==== QUEUE DEPTH (every 5 s) ===============================================
+    0.0s queued=0       running=0
+    5.0s queued=1       running=2
+   10.1s queued=1       running=2
+   15.1s queued=1       running=0
+   20.1s queued=0       running=1
+   25.2s queued=0       running=0
+   30.2s queued=0       running=0
+
+==== VERDICT AGAINST PRE-REGISTERED CRITERIA ===============================
+p99 latency < 200 ms            OK   (15.9 ms)
+errors (5xx + timeouts) < 0.1%  OK   (0.000%)
+queue depth not growing (3 min) OK   (0.00 jobs/s growth, allowed 0.23; creates 4.5/s)
+SHIP at this load and mix
+
+exit code: 0   raw log: runs/dev/20261110T141827Z-load-seed1.log

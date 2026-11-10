@@ -8,4 +8,4 @@ target/
 .DS_Store
 
 # Harness scratch (raw .log files in runs/ ARE committed)
-runs/*.jsonl
+runs/**/*.jsonl

@@ -126,6 +126,14 @@ were explained. How each one is verified is listed next to it.
 - **AI-written test helper leaked connections.** Each throwaway test database opened a pool of 20 that was
   never closed, and Postgres refused new clients (`too many clients already`). Fixed: small pools, closed after each test.
 
+- **AI-written zombie injection made no zombies, and the harness's own "teeth" check caught it.** The first
+  1000-job dev run reported 3 pauses "of an executing worker" and **0 fenced executions**: INCONCLUSIVE. Cause: the
+  victim was chosen by a database query, but the `docker pause` CLI call lands 100–300 ms later, and a 100–500 ms job
+  is often over by then, so an idle worker got paused. Fixed: after pausing, check again whether the container still owns a
+  running job; if not, unpause at once and retry ("pause missed"). Intervals are now start-to-start. Re-run: 4 pauses, 4 fenced zombie executions.
+  Without the inconclusive rule this run would have been reported green while never testing zombies.
+- **Locale leak in the logs.** Percentages were printed as `31,9%` because the JVM picked up a Russian locale. Fixed with `Locale.ROOT`.
+
 More entries are added as they come up during implementation.
 
 ## Verification log

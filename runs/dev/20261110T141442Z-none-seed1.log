@@ -1,0 +1,10 @@
+
+==== RUN ===================================================================
+config:   Config[mode=chaos, mutant=none, jobs=10, rate=15.0, seed=1, workers=8, killEvery=PT2S, pauseEvery=PT15S, lease=PT5S, timeout=PT15M, faultWindow=0.95, fresh=false, dryRun=false, api=http://localhost:8080, dbUrl=jdbc:postgresql://localhost:55432/queue, dbUser=queue, dbPassword=queue, runsDir=runs/dev, loadRps=100, loadDuration=PT5M, loadMix=default]
+revision: fc96113-dirty
+note:     the seed fixes the workload and the fault schedule; thread scheduling and timing are not reproducible
+[    2.1s] workers started: 8 of 8
+[    2.1s] schema check: effects primary key present=false, expected=true
+[    2.1s] HARNESS ERROR: java.lang.IllegalStateException: SCHEMA MISMATCH for mode none: run with --fresh true (docker compose down -v) so the schema matches the mode
+
+exit code: 1   raw log: runs/dev/20261110T141442Z-none-seed1.log

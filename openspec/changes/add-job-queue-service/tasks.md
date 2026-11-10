@@ -52,12 +52,12 @@ Tasks marked **(stretch)** are done only after every core task in groups 1–9 i
 
 ## 7. Chaos harness
 
-- [ ] 7.1 Create the `chaos-harness` CLI with config flags (jobs, rate, workers, seed, mode, timeouts), fresh-stack setup (`down -v`, `up` with the run environment on API and workers) and a fatal schema-vs-mode check; verify `--help`, a dry run with 10 jobs, and an abort on a deliberately wrong schema
-- [ ] 7.2 Implement the seeded, paced workload (15 creates/s): ≥30% duplicates (concurrent and delayed), ~1% conflicting payloads, ~10% cancels with half targeted at running jobs, 15 s request timeout and a JSONL client log with `unknown` for timeouts; verify that the same seed generates an identical plan
-- [ ] 7.3 Implement the fault injector: SIGKILL every 2 s ± jitter with victims chosen among executing workers with p=0.8, restart after 0.5–1.5 s, a pause of an executing worker for lease + 3 s every 15 s ± 5 s, a fault window until 95% of jobs are terminal, then unpause and start all; verify on a 1,000-job run that the kill and pause rates and the "victim was executing" share are as expected
-- [ ] 7.4 Implement quiescence with a 15-minute timeout, invariants I1–I9 after quiescence, I10 sampled every second, and offending ids in the report; verify by corrupting a test database by hand (duplicate effect, stuck job, illegal audit row, far-future lease) and checking each is reported
-- [ ] 7.5 Implement the teeth counters, the inconclusive rule (exit 2), and the raw output at `runs/<UTC>-<mode>-seed<seed>.log` with config, revision, counters, invariants, expectation and exit code, without ever overwriting a file; verify that a failed run keeps its file
-- [ ] 7.6 Implement the load mode with the fixed mix (20/60/15/5), the SHIP criteria from the spec, p50/p95/p99, error rate and queue depth samples, plus a 100%-create variant; verify a 30-second run at 20 RPS produces the report
+- [x] 7.1 Create the `chaos-harness` CLI with config flags (jobs, rate, workers, seed, mode, timeouts), fresh-stack setup (`down -v`, `up` with the run environment on API and workers) and a fatal schema-vs-mode check; verify `--help`, a dry run with 10 jobs, and an abort on a deliberately wrong schema
+- [x] 7.2 Implement the seeded, paced workload (15 creates/s): ≥30% duplicates (concurrent and delayed), ~1% conflicting payloads, ~10% cancels with half targeted at running jobs, 15 s request timeout and a JSONL client log with `unknown` for timeouts; verify that the same seed generates an identical plan
+- [x] 7.3 Implement the fault injector: SIGKILL every 2 s ± jitter with victims chosen among executing workers with p=0.8, restart after 0.5–1.5 s, a pause of an executing worker for lease + 3 s every 15 s ± 5 s, a fault window until 95% of jobs are terminal, then unpause and start all; verify on a 1,000-job run that the kill and pause rates and the "victim was executing" share are as expected
+- [x] 7.4 Implement quiescence with a 15-minute timeout, invariants I1–I9 after quiescence, I10 sampled every second, and offending ids in the report; verify by corrupting a test database by hand (duplicate effect, stuck job, illegal audit row, far-future lease) and checking each is reported
+- [x] 7.5 Implement the teeth counters, the inconclusive rule (exit 2), and the raw output at `runs/<UTC>-<mode>-seed<seed>.log` with config, revision, counters, invariants, expectation and exit code, without ever overwriting a file; verify that a failed run keeps its file
+- [x] 7.6 Implement the load mode with the fixed mix (20/60/15/5), the SHIP criteria from the spec, p50/p95/p99, error rate and queue depth samples, plus a 100%-create variant; verify a 30-second run at 20 RPS produces the report
 
 ## 8. Evidence runs
 

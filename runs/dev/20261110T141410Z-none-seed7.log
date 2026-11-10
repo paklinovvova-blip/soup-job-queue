@@ -1,0 +1,68 @@
+
+==== RUN ===================================================================
+config:   Config[mode=chaos, mutant=none, jobs=10, rate=15.0, seed=7, workers=8, killEvery=PT2S, pauseEvery=PT15S, lease=PT5S, timeout=PT15M, faultWindow=0.95, fresh=true, dryRun=false, api=http://localhost:8080, dbUrl=jdbc:postgresql://localhost:55432/queue, dbUser=queue, dbPassword=queue, runsDir=runs/dev, loadRps=100, loadDuration=PT5M, loadMix=default]
+revision: fc96113-dirty
+note:     the seed fixes the workload and the fault schedule; thread scheduling and timing are not reproducible
+[    0.1s] docker compose down -v
+[    0.3s] docker compose up --scale worker=8 (QUEUE_MUTANT=none)
+[    9.2s] workers started: 8 of 8
+[    9.2s] schema check: effects primary key present=true, expected=true
+[    9.2s] worker containers: 7ed1c8b05eb6 9e83765567b5 e5a8f488ee7d 4cd09ee11f05 c614b2c54f0e e5d5f24cc6be d480712f1e96 6266ce76ac04
+plan:     keys=10 with-duplicates=3 (30.0%) concurrent-groups=3 delayed-retries=0 conflicting-resends=0 random-cancels=0 targeted-cancels=1
+
+==== CHAOS =================================================================
+[    9.9s] all 10 keys and their follow-ups sent
+[   10.9s] fault window over (100.0% terminal), stopping faults and healing workers
+[   10.9s] fault KILL    4cd09ee11f05 executing=false interrupted
+[   11.4s] waiting for quiescence (timeout 15m0s)
+
+==== FAULT LOG =============================================================
+    10.9s KILL    4cd09ee11f05 executing=false interrupted
+    11.2s START   4cd09ee11f05 executing=false heal
+
+==== INVARIANTS ============================================================
+I1   PASS no accepted job lost, no job without a submitted key                                            offending=0
+I2   PASS at most one effect per job                                                                      offending=0
+I3   PASS succeeded <=> exactly one effect; failed and cancelled have none                                offending=0
+I4   PASS no job left queued or running                                                                   offending=0
+I5   PASS cancel responses match final states                                                             offending=0
+I6   PASS one job id per key across all responses                                                         offending=0
+I7   PASS effect written by the final owner's recorded run; cancelled jobs only ran with older tokens     offending=0
+I8   PASS attempts <= max; failed jobs used all attempts                                                  offending=0
+I9   PASS audit log has only legal transitions                                                            offending=0
+I10  PASS no lease further than now() + 2 x lease (3 samples, 0 failed)                                   offending=0
+
+==== COUNTERS ==============================================================
+jobs total                                    10
+jobs succeeded                                9
+jobs failed                                   0
+jobs failed by lease loss (innocent)          0
+jobs cancelled                                1
+kills                                         1
+kills of an executing worker                  0
+pauses                                        0
+pauses of an executing worker                 0
+executions                                    10
+executions interrupted (worker died)          0
+executions fenced (zombie or lost lease)      0
+executions stopped by cancel                  1
+executions failed (emulated error)            0
+jobs with more than one execution             0
+cancels that hit a queued job                 0
+cancels that hit a running job                1
+cancel requests sent                          1
+cancel answered 409 job_finished              0
+targeted cancels sent                         1
+creates answered 201                          10
+idempotent replays answered 200               5
+concurrent duplicates answered 200            5
+conflicting resends answered 409              0
+requests timed out (unknown)                  0
+requests answered 5xx                         0
+run seconds                                   2
+throughput terminal jobs per second           4.7
+
+==== VERDICT ===============================================================
+INCONCLUSIVE: all invariants passed, but the faults did not reach the dangerous paths: [no kill interrupted an execution, no execution was fenced, fewer than 50 cancels hit a running job (1)]
+
+exit code: 2   raw log: runs/dev/20261110T141410Z-none-seed7.log

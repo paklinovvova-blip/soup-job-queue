@@ -1,0 +1,184 @@
+
+==== RUN ===================================================================
+config:   Config[mode=chaos, mutant=none, jobs=1000, rate=15.0, seed=11, workers=8, killEvery=PT2S, pauseEvery=PT15S, lease=PT5S, timeout=PT15M, faultWindow=0.95, fresh=true, dryRun=false, api=http://localhost:8080, dbUrl=jdbc:postgresql://localhost:55432/queue, dbUser=queue, dbPassword=queue, runsDir=runs/dev, loadRps=100, loadDuration=PT5M, loadMix=default]
+revision: fc96113-dirty
+note:     the seed fixes the workload and the fault schedule; thread scheduling and timing are not reproducible
+[    0.0s] docker compose down -v
+[    1.9s] docker compose up --scale worker=8 (QUEUE_MUTANT=none)
+[   10.6s] workers started: 8 of 8
+[   10.6s] schema check: effects primary key present=true, expected=true
+[   10.7s] worker containers: 3196439bee5a 715e4f307cde d70de96c3cce 79fcdf56a15e f2ce0f7e9440 dcf78388973a 7ff36d956198 5bee183e1ac9
+plan:     keys=1000 with-duplicates=336 (33.6%) concurrent-groups=146 delayed-retries=277 conflicting-resends=10 random-cancels=55 targeted-cancels=54
+
+==== CHAOS =================================================================
+[   12.9s] fault KILL    dcf78388973a executing=true 
+[   15.3s] fault KILL    d70de96c3cce executing=true 
+[   17.4s] fault KILL    d70de96c3cce executing=true 
+[   19.7s] fault KILL    d70de96c3cce executing=true 
+[   20.7s] progress: submitted=151 jobs={cancelled=7, queued=1, running=5, succeeded=138} kills=4 pauses=0 targeted-cancels-sent=7
+[   21.3s] fault KILL    3196439bee5a executing=true 
+[   21.6s] fault PAUSE   7ff36d956198 executing=true for 8000ms
+[   23.5s] fault KILL    3196439bee5a executing=true 
+[   25.8s] fault KILL    3196439bee5a executing=true 
+[   27.8s] fault KILL    5bee183e1ac9 executing=true 
+[   29.4s] fault KILL    f2ce0f7e9440 executing=true 
+[   30.7s] progress: submitted=301 jobs={cancelled=14, failed=1, queued=1, running=9, succeeded=276} kills=9 pauses=1 targeted-cancels-sent=16
+[   32.0s] fault KILL    715e4f307cde executing=true 
+[   33.7s] fault KILL    f2ce0f7e9440 executing=true 
+[   36.3s] fault KILL    3196439bee5a executing=true 
+[   38.4s] fault KILL    7ff36d956198 executing=true 
+[   40.4s] fault KILL    d70de96c3cce executing=true 
+[   40.8s] progress: submitted=451 jobs={cancelled=22, failed=1, running=5, succeeded=423} kills=14 pauses=1 targeted-cancels-sent=25
+[   41.5s] fault PAUSE   79fcdf56a15e executing=true for 8000ms
+[   42.0s] fault KILL    5bee183e1ac9 executing=true 
+[   44.6s] fault KILL    dcf78388973a executing=true 
+[   46.2s] fault KILL    715e4f307cde executing=true 
+[   48.0s] fault KILL    7ff36d956198 executing=true 
+[   50.1s] fault KILL    5bee183e1ac9 executing=true 
+[   50.8s] progress: submitted=602 jobs={cancelled=25, failed=1, queued=2, running=7, succeeded=567} kills=19 pauses=2 targeted-cancels-sent=30
+[   52.6s] fault KILL    dcf78388973a executing=true 
+[   54.2s] fault KILL    3196439bee5a executing=true 
+[   57.0s] fault KILL    7ff36d956198 executing=true 
+[   57.1s] fault PAUSE   79fcdf56a15e executing=true for 8000ms
+[   58.7s] fault KILL    7ff36d956198 executing=true 
+[   60.6s] fault KILL    3196439bee5a executing=true 
+[   60.8s] progress: submitted=752 jobs={cancelled=25, failed=1, queued=2, running=8, succeeded=716} kills=24 pauses=3 targeted-cancels-sent=34
+[   62.9s] fault KILL    dcf78388973a executing=true 
+[   64.7s] fault KILL    5bee183e1ac9 executing=true 
+[   66.6s] fault KILL    5bee183e1ac9 executing=true 
+[   69.1s] fault KILL    3196439bee5a executing=true 
+[   70.8s] progress: submitted=902 jobs={cancelled=31, failed=1, queued=3, running=4, succeeded=863} kills=28 pauses=3 targeted-cancels-sent=41
+[   71.0s] fault KILL    d70de96c3cce executing=true 
+[   73.4s] fault KILL    7ff36d956198 executing=true 
+[   74.5s] fault PAUSE   79fcdf56a15e executing=true for 8000ms
+[   75.1s] fault KILL    d70de96c3cce executing=true 
+[   77.0s] fault KILL    d70de96c3cce executing=true 
+[   79.2s] fault KILL    d70de96c3cce executing=true 
+[   80.1s] all 1000 keys and their follow-ups sent
+[   80.2s] fault window over (99.9% terminal), stopping faults and healing workers
+[   80.6s] waiting for quiescence (timeout 15m0s)
+
+==== FAULT LOG =============================================================
+    12.9s KILL    dcf78388973a executing=true  
+    14.2s START   dcf78388973a executing=false after 1219ms
+    15.3s KILL    d70de96c3cce executing=true  
+    16.5s START   d70de96c3cce executing=false after 1052ms
+    17.4s KILL    d70de96c3cce executing=true  
+    18.2s START   d70de96c3cce executing=false after 739ms
+    19.7s KILL    d70de96c3cce executing=true  
+    20.7s START   d70de96c3cce executing=false after 860ms
+    21.3s KILL    3196439bee5a executing=true  
+    21.6s PAUSE   7ff36d956198 executing=true  for 8000ms
+    22.2s START   3196439bee5a executing=false after 881ms
+    23.5s KILL    3196439bee5a executing=true  
+    24.7s START   3196439bee5a executing=false after 1153ms
+    25.8s KILL    3196439bee5a executing=true  
+    26.7s START   3196439bee5a executing=false after 867ms
+    27.8s KILL    5bee183e1ac9 executing=true  
+    29.2s START   5bee183e1ac9 executing=false after 1324ms
+    29.4s KILL    f2ce0f7e9440 executing=true  
+    29.6s UNPAUSE 7ff36d956198 executing=false 
+    30.9s START   f2ce0f7e9440 executing=false after 1414ms
+    32.0s KILL    715e4f307cde executing=true  
+    32.8s START   715e4f307cde executing=false after 570ms
+    33.7s KILL    f2ce0f7e9440 executing=true  
+    35.0s START   f2ce0f7e9440 executing=false after 881ms
+    36.3s KILL    3196439bee5a executing=true  
+    37.7s START   3196439bee5a executing=false after 1209ms
+    38.4s KILL    7ff36d956198 executing=true  
+    39.7s START   7ff36d956198 executing=false after 1186ms
+    40.4s KILL    d70de96c3cce executing=true  
+    41.5s PAUSE   79fcdf56a15e executing=true  for 8000ms
+    42.0s KILL    5bee183e1ac9 executing=true  
+    42.0s START   d70de96c3cce executing=false after 1447ms
+    42.7s START   5bee183e1ac9 executing=false after 582ms
+    44.6s KILL    dcf78388973a executing=true  
+    45.2s START   dcf78388973a executing=false after 501ms
+    46.2s KILL    715e4f307cde executing=true  
+    47.7s START   715e4f307cde executing=false after 1416ms
+    48.0s KILL    7ff36d956198 executing=true  
+    49.3s START   7ff36d956198 executing=false after 1190ms
+    49.5s UNPAUSE 79fcdf56a15e executing=false 
+    50.1s KILL    5bee183e1ac9 executing=true  
+    50.9s START   5bee183e1ac9 executing=false after 675ms
+    52.6s KILL    dcf78388973a executing=true  
+    53.5s START   dcf78388973a executing=false after 776ms
+    54.2s KILL    3196439bee5a executing=true  
+    55.0s START   3196439bee5a executing=false after 687ms
+    57.0s KILL    7ff36d956198 executing=true  
+    57.1s PAUSE   79fcdf56a15e executing=true  for 8000ms
+    58.4s START   7ff36d956198 executing=false after 1328ms
+    58.7s KILL    7ff36d956198 executing=true  
+    59.7s START   7ff36d956198 executing=false after 942ms
+    60.6s KILL    3196439bee5a executing=true  
+    61.9s START   3196439bee5a executing=false after 1163ms
+    62.9s KILL    dcf78388973a executing=true  
+    64.0s START   dcf78388973a executing=false after 943ms
+    64.7s KILL    5bee183e1ac9 executing=true  
+    65.1s UNPAUSE 79fcdf56a15e executing=false 
+    65.8s START   5bee183e1ac9 executing=false after 1056ms
+    66.6s KILL    5bee183e1ac9 executing=true  
+    67.4s START   5bee183e1ac9 executing=false after 617ms
+    69.1s KILL    3196439bee5a executing=true  
+    70.3s START   3196439bee5a executing=false after 1135ms
+    71.0s KILL    d70de96c3cce executing=true  
+    72.5s START   d70de96c3cce executing=false after 1400ms
+    73.4s KILL    7ff36d956198 executing=true  
+    74.5s PAUSE   79fcdf56a15e executing=true  for 8000ms
+    74.5s START   7ff36d956198 executing=false after 1013ms
+    75.1s KILL    d70de96c3cce executing=true  
+    76.6s START   d70de96c3cce executing=false after 1351ms
+    77.0s KILL    d70de96c3cce executing=true  
+    78.3s START   d70de96c3cce executing=false after 1218ms
+    79.2s KILL    d70de96c3cce executing=true  
+    80.2s UNPAUSE 79fcdf56a15e executing=false 
+    80.4s START   d70de96c3cce executing=false heal
+    80.6s START   d70de96c3cce executing=false after 1374ms
+
+==== INVARIANTS ============================================================
+I1   PASS no accepted job lost, no job without a submitted key                                            offending=0
+I2   PASS at most one effect per job                                                                      offending=0
+I3   PASS succeeded <=> exactly one effect; failed and cancelled have none                                offending=0
+I4   PASS no job left queued or running                                                                   offending=0
+I5   PASS cancel responses match final states                                                             offending=0
+I6   PASS one job id per key across all responses                                                         offending=0
+I7   PASS effect written by the final owner's recorded run; cancelled jobs only ran with older tokens     offending=0
+I8   PASS attempts <= max; failed jobs used all attempts                                                  offending=0
+I9   PASS audit log has only legal transitions                                                            offending=0
+I10  PASS no lease further than now() + 2 x lease (69 samples, 0 failed)                                  offending=0
+
+==== COUNTERS ==============================================================
+jobs total                                    1000
+jobs succeeded                                965
+jobs failed                                   1
+jobs failed by lease loss (innocent)          0
+jobs cancelled                                34
+kills                                         33
+kills of an executing worker                  33
+pauses                                        4
+pauses of an executing worker                 4
+pause attempts that missed (worker idle)      0
+executions                                    1075
+executions interrupted (worker died)          26
+executions fenced (zombie or lost lease)      4
+executions stopped by cancel                  27
+executions failed (emulated error)            53
+jobs with more than one execution             69
+cancels that hit a queued job                 3
+cancels that hit a running job                31
+cancel requests sent                          98
+cancel answered 409 job_finished              64
+targeted cancels sent                         43
+creates answered 201                          1000
+idempotent replays answered 200               500
+concurrent duplicates answered 200            223
+conflicting resends answered 409              10
+requests timed out (unknown)                  0
+requests answered 5xx                         0
+run seconds                                   69
+throughput terminal jobs per second           14.3
+
+==== VERDICT ===============================================================
+INCONCLUSIVE: all invariants passed, but the faults did not reach the dangerous paths: [fewer than 50 cancels hit a running job (31)]
+
+exit code: 2   raw log: runs/dev/20261110T141657Z-none-seed11.log
