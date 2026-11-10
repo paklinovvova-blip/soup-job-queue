@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import dev.soup.queue.QueueProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,6 +24,9 @@ import org.springframework.transaction.support.TransactionTemplate;
  * a write for a running job only succeeds if {@code status = 'running' AND lease_token = :token},
  * and every transition except running → succeeded bumps the token.
  * See openspec/changes/add-job-queue-service/design.md, D5–D11.
+ * <p>
+ * With a {@link Mutant} other than NONE, one protection is removed on purpose (design D15). The mutant
+ * branches are kept next to the correct statements, so the difference is visible in one place.
  */
 @Repository
 public class JobRepository {
@@ -30,12 +37,34 @@ public class JobRepository {
             lease_token, lease_owner, lease_expires_at, claimed_at, run_after, last_error,
             created_at, updated_at, started_at, finished_at""";
 
+    private static final Logger log = LoggerFactory.getLogger(JobRepository.class);
+    static final Duration MUTANT_CLOCK_SKEW = Duration.ofHours(1);
+
     private final JdbcTemplate jdbc;
     private final TransactionTemplate tx;
+    private final Mutant mutant;
 
     public JobRepository(JdbcTemplate jdbc, TransactionTemplate tx) {
+        this(jdbc, tx, Mutant.NONE);
+    }
+
+    @Autowired
+    public JobRepository(JdbcTemplate jdbc, TransactionTemplate tx, QueueProperties props) {
+        this(jdbc, tx, Mutant.parse(props.mutant()));
+    }
+
+    public JobRepository(JdbcTemplate jdbc, TransactionTemplate tx, Mutant mutant) {
         this.jdbc = jdbc;
         this.tx = tx;
+        this.mutant = mutant;
+        if (mutant != Mutant.NONE) {
+            log.warn("!!!!!!!!!!!!!!!! MUTANT MODE {}: a protection is DISABLED ON PURPOSE. Never run this in production !!!!!!!!!!!!!!!!",
+                    mutant.flag());
+        }
+    }
+
+    public Mutant mutant() {
+        return mutant;
     }
 
     // ---------------------------------------------------------------- API side
@@ -111,6 +140,24 @@ public class JobRepository {
      * Keep {@code id = (scalar subquery)}: with {@code IN} the planner may lock more rows.
      */
     public Optional<ClaimedJob> claim(String workerId, Duration lease) {
+        if (mutant == Mutant.NAIVE_CLAIM) {
+            return NaiveClaimMutant.claim(jdbc, workerId, lease);
+        }
+        if (mutant == Mutant.WORKER_CLOCK_LEASE) {
+            return jdbc.query("""
+                    UPDATE jobs
+                       SET status = 'running', lease_token = lease_token + 1, lease_owner = ?,
+                           lease_expires_at = ?, attempts = attempts + 1,
+                           claimed_at = now(), started_at = COALESCE(started_at, now()), updated_at = now()
+                     WHERE id = (SELECT id FROM jobs
+                                  WHERE status = 'queued' AND run_after <= now()
+                                  ORDER BY run_after, created_at
+                                  FOR UPDATE SKIP LOCKED
+                                  LIMIT 1)
+                    RETURNING id, lease_token, attempts, payload::text AS payload
+                    """, CLAIM_MAPPER, workerId, WorkerClockLeaseMutant.leaseExpiry(MUTANT_CLOCK_SKEW, lease))
+                    .stream().findFirst();
+        }
         return jdbc.query("""
                 UPDATE jobs
                    SET status = 'running', lease_token = lease_token + 1, lease_owner = ?,
@@ -122,11 +169,11 @@ public class JobRepository {
                               FOR UPDATE SKIP LOCKED
                               LIMIT 1)
                 RETURNING id, lease_token, attempts, payload::text AS payload
-                """,
-                (rs, n) -> new ClaimedJob(rs.getObject("id", UUID.class), rs.getLong("lease_token"),
-                        rs.getInt("attempts"), rs.getString("payload")),
-                workerId, seconds(lease)).stream().findFirst();
+                """, CLAIM_MAPPER, workerId, seconds(lease)).stream().findFirst();
     }
+
+    private static final RowMapper<ClaimedJob> CLAIM_MAPPER = (rs, n) -> new ClaimedJob(
+            rs.getObject("id", UUID.class), rs.getLong("lease_token"), rs.getInt("attempts"), rs.getString("payload"));
 
     /** Record that a real run starts. Separate from the effect, so runs can be counted. */
     public long insertExecution(UUID jobId, long token, String workerId) {
@@ -141,6 +188,18 @@ public class JobRepository {
      * {@code false} means the lease was taken away (cancel, reap) and the worker must stop.
      */
     public boolean heartbeat(UUID jobId, long token, Duration lease, Duration maxRuntime) {
+        if (mutant == Mutant.NO_FENCING) {
+            return jdbc.update("UPDATE jobs SET lease_expires_at = now() + make_interval(secs => ?), updated_at = now() WHERE id = ?",
+                    seconds(lease), jobId) == 1;
+        }
+        if (mutant == Mutant.WORKER_CLOCK_LEASE) {
+            return jdbc.update("""
+                    UPDATE jobs SET lease_expires_at = ?, updated_at = now()
+                     WHERE id = ? AND status = 'running' AND lease_token = ?
+                       AND claimed_at > now() - make_interval(secs => ?)
+                    """, WorkerClockLeaseMutant.leaseExpiry(MUTANT_CLOCK_SKEW, lease), jobId, token,
+                    seconds(maxRuntime)) == 1;
+        }
         return jdbc.update("""
                 UPDATE jobs SET lease_expires_at = now() + make_interval(secs => ?), updated_at = now()
                  WHERE id = ? AND status = 'running' AND lease_token = ?
@@ -155,11 +214,17 @@ public class JobRepository {
      */
     public boolean complete(UUID jobId, long token, String workerId, long executionId) {
         Boolean done = tx.execute(status -> {
-            int updated = jdbc.update("""
-                    UPDATE jobs SET status = 'succeeded', finished_at = now(),
-                           lease_owner = NULL, lease_expires_at = NULL, updated_at = now()
-                     WHERE id = ? AND status = 'running' AND lease_token = ?
-                    """, jobId, token);
+            int updated = mutant == Mutant.NO_FENCING
+                    ? jdbc.update("""
+                        UPDATE jobs SET status = 'succeeded', finished_at = now(),
+                               lease_owner = NULL, lease_expires_at = NULL, updated_at = now()
+                         WHERE id = ?
+                        """, jobId)
+                    : jdbc.update("""
+                        UPDATE jobs SET status = 'succeeded', finished_at = now(),
+                               lease_owner = NULL, lease_expires_at = NULL, updated_at = now()
+                         WHERE id = ? AND status = 'running' AND lease_token = ?
+                        """, jobId, token);
             if (updated == 0) {
                 status.setRollbackOnly();
                 return false;
@@ -188,8 +253,10 @@ public class JobRepository {
                                                                                    * (1 + random() * 0.2)) END,
                            lease_token = lease_token + 1, lease_owner = NULL, lease_expires_at = NULL,
                            last_error  = ?, updated_at = now()
-                     WHERE id = ? AND status = 'running' AND lease_token = ?
-                    """, seconds(retryBase), error, jobId, token);
+                     WHERE id = ?""" + (mutant == Mutant.NO_FENCING ? "" : " AND status = 'running' AND lease_token = ?"),
+                    mutant == Mutant.NO_FENCING
+                            ? new Object[] {seconds(retryBase), error, jobId}
+                            : new Object[] {seconds(retryBase), error, jobId, token});
             if (updated == 0) {
                 status.setRollbackOnly();
                 return false;

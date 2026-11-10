@@ -40,6 +40,21 @@ public final class TestDb {
     private TestDb() {
     }
 
+    /** A fresh, separate database in the same container, migrated with the given Flyway locations. */
+    public static HikariDataSource freshDatabase(String name, String... flywayLocations) {
+        JDBC.execute("DROP DATABASE IF EXISTS " + name + " WITH (FORCE)");
+        JDBC.execute("CREATE DATABASE " + name);
+        HikariConfig cfg = new HikariConfig();
+        cfg.setJdbcUrl(PG.getJdbcUrl().replace("/" + PG.getDatabaseName(), "/" + name));
+        cfg.setUsername(PG.getUsername());
+        cfg.setPassword(PG.getPassword());
+        cfg.setMaximumPoolSize(17);
+        cfg.setMinimumIdle(1); // callers must close() it: the container allows 100 connections in total
+        HikariDataSource ds = new HikariDataSource(cfg);
+        Flyway.configure().dataSource(ds).locations(flywayLocations).load().migrate();
+        return ds;
+    }
+
     public static void clean() {
         JDBC.execute("TRUNCATE job_transitions, effects, executions, jobs");
     }

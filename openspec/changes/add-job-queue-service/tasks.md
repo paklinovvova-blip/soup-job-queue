@@ -40,15 +40,15 @@ Tasks marked **(stretch)** are done only after every core task in groups 1–9 i
 
 ## 5. Mutant modes
 
-- [ ] 5.1 Add the `QUEUE_MUTANT` setting for API and worker, a WARN startup banner, the `naive-claim` class, the `no-fencing` SQL variants with their Flyway location, and the `worker-clock-lease` variant; verify the default is `none` and the banner prints for every other value
-- [ ] 5.2 Add one targeted test per mutant: `naive-claim` produces a `running → running` audit row under concurrent claims, `no-fencing` lets a stale token write a second effect, and `worker-clock-lease` writes a lease more than 1 h ahead; verify each test fails with the mutant on and passes with it off
+- [x] 5.1 Add the `QUEUE_MUTANT` setting for API and worker, a WARN startup banner, the `naive-claim` class, the `no-fencing` SQL variants with their Flyway location, and the `worker-clock-lease` variant; verify the default is `none` and the banner prints for every other value
+- [x] 5.2 Add one targeted test per mutant: `naive-claim` produces a `running → running` audit row under concurrent claims, `no-fencing` lets a stale token write a second effect, and `worker-clock-lease` writes a lease more than 1 h ahead; verify each test fails with the mutant on and passes with it off
 
 ## 6. Containers
 
-- [ ] 6.1 Write a multi-stage `Dockerfile` for `queue-service` (Maven build, glibc-based Temurin JRE 21 with `libfaketime` installed, worker JVM flags from D16); verify the image builds and starts in both roles
-- [ ] 6.2 Extend `docker-compose.yml` with `api` (port 8080, runs migrations) and `worker` (`deploy.replicas: 8`, `restart: unless-stopped`, waits for the schema), passing all timings, `QUEUE_MUTANT` and pool sizes as environment variables; verify a clean `docker compose up` gives 1 API and 8 workers
-- [ ] 6.3 Add `scripts/smoke.sh` that creates, polls, lists and cancels jobs with `curl`; verify that on a fresh stack it ends with a succeeded and a cancelled job
-- [ ] 6.4 Write `README.md` with how to run the stack, the smoke test, the tests and the harness; verify each documented command runs as written
+- [x] 6.1 Write a multi-stage `Dockerfile` for `queue-service` (Maven build, glibc-based Temurin JRE 21 with `libfaketime` installed, worker JVM flags from D16); verify the image builds and starts in both roles
+- [x] 6.2 Extend `docker-compose.yml` with `api` (port 8080, runs migrations) and `worker` (`deploy.replicas: 8`, `restart: unless-stopped`, waits for the schema), passing all timings, `QUEUE_MUTANT` and pool sizes as environment variables; verify a clean `docker compose up` gives 1 API and 8 workers
+- [x] 6.3 Add `scripts/smoke.sh` that creates, polls, lists and cancels jobs with `curl`; verify that on a fresh stack it ends with a succeeded and a cancelled job
+- [x] 6.4 Write `README.md` with how to run the stack, the smoke test, the tests and the harness; verify each documented command runs as written
 
 ## 7. Chaos harness
 

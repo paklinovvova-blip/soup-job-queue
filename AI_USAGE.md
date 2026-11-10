@@ -97,7 +97,9 @@ were explained. How each one is verified is listed next to it.
 
 - **Docker restart policy after `docker kill`.** The AI was not sure whether `restart:` brings a
   container back after `docker kill`. Decision: the harness restarts killed containers explicitly
-  and does not rely on the restart policy.
+  and does not rely on the restart policy. **Checked later on the real stack:** 5 s after
+  `docker kill -s KILL`, a worker with `restart: unless-stopped` was still `exited` with `RestartCount=0`.
+  Docker treats `kill` as a manual stop, so relying on the policy would have left the fleet shrinking during the chaos run.
 - **OpenSpec version.** The newest npm release (`1.17.0`) was published one day before we started.
   We pinned `1.15.0`, which was released more than two weeks earlier, so a fresh and possibly broken release
   would not affect the project.
@@ -120,6 +122,9 @@ were explained. How each one is verified is listed next to it.
   This is the "green does not mean tested" lesson from the task, seen on our own run.
 - **Cancels in a deep backlog hit only queued jobs.** In the same smoke run, all 20 cancels landed on queued jobs.
   This confirms review finding B2 in practice. The chaos harness targets half of its cancels at running jobs for this reason.
+
+- **AI-written test helper leaked connections.** Each throwaway test database opened a pool of 20 that was
+  never closed, and Postgres refused new clients (`too many clients already`). Fixed: small pools, closed after each test.
 
 More entries are added as they come up during implementation.
 

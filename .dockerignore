@@ -1,0 +1,8 @@
+**/target
+.git
+.idea
+.claude
+.DS_Store
+runs
+openspec
+*.md

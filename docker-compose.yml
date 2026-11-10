@@ -1,3 +1,22 @@
+# docker compose up        → Postgres, 1 API on :8080, 8 workers
+# Every timing and the mutant mode can be overridden from the environment, e.g.
+#   QUEUE_MUTANT=no-fencing docker compose up
+# Postgres is published on host port 55432 (5432 is often taken by a local Postgres).
+
+x-queue-env: &queue-env
+  DB_URL: jdbc:postgresql://postgres:5432/queue
+  DB_USER: queue
+  DB_PASSWORD: queue
+  QUEUE_MUTANT: ${QUEUE_MUTANT:-none}
+  QUEUE_LEASE: ${QUEUE_LEASE:-5s}
+  QUEUE_HEARTBEAT: ${QUEUE_HEARTBEAT:-1s}
+  QUEUE_REAPER: ${QUEUE_REAPER:-1s}
+  QUEUE_MAX_RUNTIME: ${QUEUE_MAX_RUNTIME:-60s}
+  QUEUE_STOP_DEADLINE: ${QUEUE_STOP_DEADLINE:-5s}
+  EMULATOR_MIN_DURATION: ${EMULATOR_MIN_DURATION:-100ms}
+  EMULATOR_MAX_DURATION: ${EMULATOR_MAX_DURATION:-500ms}
+  EMULATOR_FAILURE_PROBABILITY: ${EMULATOR_FAILURE_PROBABILITY:-0.05}
+
 services:
   postgres:
     image: postgres:16
@@ -14,6 +33,45 @@ services:
       interval: 2s
       timeout: 3s
       retries: 30
+
+  api:
+    build: .
+    image: soup-queue-service:local
+    environment:
+      <<: *queue-env
+      SPRING_PROFILES_ACTIVE: api
+      DB_POOL_SIZE: "10"
+      JAVA_OPTS: "-Xmx384m -XX:+UseSerialGC"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf localhost:8080/actuator/health || exit 1"]
+      interval: 2s
+      timeout: 3s
+      retries: 60
+    restart: unless-stopped
+
+  worker:
+    build: .
+    image: soup-queue-service:local
+    environment:
+      <<: *queue-env
+      SPRING_PROFILES_ACTIVE: worker
+      DB_POOL_SIZE: "4"
+      # Small heap and C1 only: a killed worker comes back within a few seconds (design D16).
+      JAVA_OPTS: "-Xmx256m -XX:TieredStopAtLevel=1 -XX:+UseSerialGC"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    deploy:
+      replicas: 8
+    restart: unless-stopped
+    stop_grace_period: 15s
 
 volumes:
   pgdata:
