@@ -1,0 +1,41 @@
+schema: spec-driven
+
+context: |
+  Take-home task for a backend internship: a training-job queue service whose main goal is to prove
+  correctness under failure (kill -9 of workers, zombie workers, duplicate requests, cancel races).
+  Stack is fixed: Java 21, Spring Boot 3, plain JDBC (JdbcTemplate, no JPA), Postgres 16, Flyway, Maven, Docker Compose.
+  Everything must start with `docker compose up`.
+  Write all OpenSpec artifacts in English (the reviewers read English).
+  Every correctness claim must be backed by a test, a chaos run or a seeded-bug (mutant) run; failed runs are kept, never hidden.
+  The author must be able to explain every decision, so prefer explicit, simple mechanisms over clever ones.
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+# Example:
+#   context: |
+#     Designs and tasks must cover Windows, macOS, and Linux
+#     Write all artifacts in Spanish
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing

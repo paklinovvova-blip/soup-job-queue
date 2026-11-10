@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: queue-service
+  profiles:
+    default: api
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:55432/queue}
+    username: ${DB_USER:queue}
+    password: ${DB_PASSWORD:queue}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+      # A paused worker must not hold row locks forever inside an open transaction (design D6).
+      connection-init-sql: SET idle_in_transaction_session_timeout = '2s'
+
+queue:
+  mutant: ${QUEUE_MUTANT:none}
+  lease: ${QUEUE_LEASE:5s}
+  heartbeat-interval: ${QUEUE_HEARTBEAT:1s}
+  reaper-interval: ${QUEUE_REAPER:1s}
+  reaper-batch: ${QUEUE_REAPER_BATCH:100}
+  max-runtime: ${QUEUE_MAX_RUNTIME:60s}
+  retry-base: ${QUEUE_RETRY_BASE:500ms}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+server:
+  port: ${PORT:8080}

@@ -1,0 +1,11 @@
+# Build
+target/
+*.class
+
+# IDE / OS
+.idea/
+*.iml
+.DS_Store
+
+# Harness scratch (raw .log files in runs/ ARE committed)
+runs/*.jsonl

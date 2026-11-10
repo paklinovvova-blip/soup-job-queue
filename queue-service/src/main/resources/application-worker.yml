@@ -1,0 +1,9 @@
+spring:
+  main:
+    web-application-type: none
+  flyway:
+    # Only the api role migrates. Workers wait for the schema instead (design D3).
+    enabled: false
+  datasource:
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:4}
