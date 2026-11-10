@@ -20,12 +20,12 @@ Tasks marked **(stretch)** are done only after every core task in groups 1–9 i
 
 ## 3. Public API
 
-- [ ] 3.1 Implement canonical JSON (recursive key sort, `BigDecimal.stripTrailingZeros`) and SHA-256 hashing; verify unit tests: key order and `1` vs `1.0` give equal hashes, while a different value gives a different hash
-- [ ] 3.2 Implement `POST /jobs` with `Idempotency-Key`, the 16 KiB payload limit, 201/200/409 (`jobId`)/400 responses and the `Location` header; verify the `job-api` create scenarios with MockMvc plus Testcontainers
-- [ ] 3.3 Add a concurrent duplicate test: 50 parallel POSTs with one key give exactly one 201, 49 times 200 and a single job id
-- [ ] 3.4 Implement `GET /jobs/{id}` and the error format (`not_found`, `invalid_request`); verify the 200/404/400 scenarios
-- [ ] 3.5 Implement `GET /jobs` with keyset cursor, `limit` 1–100, `status` filter and parameter validation; verify a full page walk with concurrent inserts shows every pre-existing job exactly once
-- [ ] 3.6 Implement `POST /jobs/{id}/cancel` with 200, 409 (with `job`) and 404 semantics from design D8; verify the cancel scenarios, including cancelling twice and cancelling a finished job
+- [x] 3.1 Implement canonical JSON (recursive key sort, `BigDecimal.stripTrailingZeros`) and SHA-256 hashing; verify unit tests: key order and `1` vs `1.0` give equal hashes, while a different value gives a different hash
+- [x] 3.2 Implement `POST /jobs` with `Idempotency-Key`, the 16 KiB payload limit, 201/200/409 (`jobId`)/400 responses and the `Location` header; verify the `job-api` create scenarios with MockMvc plus Testcontainers
+- [x] 3.3 Add a concurrent duplicate test: 50 parallel POSTs with one key give exactly one 201, 49 times 200 and a single job id
+- [x] 3.4 Implement `GET /jobs/{id}` and the error format (`not_found`, `invalid_request`); verify the 200/404/400 scenarios
+- [x] 3.5 Implement `GET /jobs` with keyset cursor, `limit` 1–100, `status` filter and parameter validation; verify a full page walk with concurrent inserts shows every pre-existing job exactly once
+- [x] 3.6 Implement `POST /jobs/{id}/cancel` with 200, 409 (with `job`) and 404 semantics from design D8; verify the cancel scenarios, including cancelling twice and cancelling a finished job
 
 ## 4. Worker
 
