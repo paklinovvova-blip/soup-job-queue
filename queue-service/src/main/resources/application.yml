@@ -20,6 +20,15 @@ queue:
   reaper-batch: ${QUEUE_REAPER_BATCH:100}
   max-runtime: ${QUEUE_MAX_RUNTIME:60s}
   retry-base: ${QUEUE_RETRY_BASE:500ms}
+  stop-deadline: ${QUEUE_STOP_DEADLINE:5s}
+  idle-backoff-min: ${QUEUE_IDLE_BACKOFF_MIN:100ms}
+  idle-backoff-max: ${QUEUE_IDLE_BACKOFF_MAX:1s}
+  # Payload field "simulate" (crash | hang) is honoured only when this is true. Off in compose.
+  test-hooks: ${WORKER_TEST_HOOKS:false}
+  emulator:
+    min-duration: ${EMULATOR_MIN_DURATION:100ms}
+    max-duration: ${EMULATOR_MAX_DURATION:500ms}
+    failure-probability: ${EMULATOR_FAILURE_PROBABILITY:0.05}
 
 management:
   endpoints:

@@ -110,6 +110,17 @@ were explained. How each one is verified is listed next to it.
   In the design a job becomes `failed` only after all attempts, so the wording was tightened.
 - **`openspec validate --strict` flagged a requirement over 500 characters.** It was split into two requirements, each with its own scenarios.
 
+- **AI-written SQL had a whitespace bug that the tests caught.** A Java text block strips trailing spaces,
+  so `"RETURNING """ + columns` produced `RETURNINGid`. 20 repository tests failed on the first run. Fixed with a leading space and a comment.
+- **AI-written smoke script hung.** A bare `wait` in bash waits for *all* background jobs, including the Java
+  worker processes, so the script never reached the `kill -9`. Rewritten to wait only for the curl requests.
+- **The first live kill -9 smoke did not test what it was meant to test.** The killed worker's job happened to
+  be one of the jobs the script then cancelled, so the reaper never had to pick it up (audit log: `running → cancelled`, 1 row).
+  The run was "green", but it did not exercise the reaper. Re-run without cancels: the reaper returned the job and all 300 jobs succeeded with 300 effects.
+  This is the "green does not mean tested" lesson from the task, seen on our own run.
+- **Cancels in a deep backlog hit only queued jobs.** In the same smoke run, all 20 cancels landed on queued jobs.
+  This confirms review finding B2 in practice. The chaos harness targets half of its cancels at running jobs for this reason.
+
 More entries are added as they come up during implementation.
 
 ## Verification log

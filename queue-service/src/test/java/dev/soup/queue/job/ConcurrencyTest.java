@@ -210,20 +210,7 @@ class ConcurrencyTest {
         }
         pool.shutdown();
         System.out.printf("cancel/complete race: cancel won %d, complete won %d%n", cancelWins, completeWins);
-        assertThat(illegalTransitions()).isZero();
-    }
-
-    /** Same edge table as chaos invariant I9. */
-    static int illegalTransitions() {
-        return count("""
-                SELECT count(*) FROM job_transitions
-                 WHERE NOT (
-                       (old_status = 'queued'  AND new_status = 'running'   AND new_token = old_token + 1)
-                    OR (old_status = 'running' AND new_status = 'queued'    AND new_token = old_token + 1)
-                    OR (old_status = 'running' AND new_status = 'failed'    AND new_token = old_token + 1)
-                    OR (old_status = 'running' AND new_status = 'succeeded' AND new_token = old_token)
-                    OR (old_status IN ('queued', 'running') AND new_status = 'cancelled' AND new_token = old_token + 1))
-                """);
+        assertThat(TestDb.illegalTransitions()).isZero();
     }
 
     // 2.6 --------------------------------------------------------------------
