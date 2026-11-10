@@ -61,18 +61,18 @@ Tasks marked **(stretch)** are done only after every core task in groups 1–9 i
 
 ## 8. Evidence runs
 
-- [ ] 8.1 Run the full chaos test (10,000 jobs, 8 workers) in `none` mode with at least 3 different seeds; verify that the logs are in `runs/` and that failures are investigated and kept, not rerun until green
-- [ ] 8.2 Run `naive-claim` and `no-fencing` at least once each; verify that each run reports "expected failure: caught", or record honestly that it was not caught and why
-- [ ] 8.3 Run the load mode at 100 RPS with the fixed mix for 5 minutes, and the 100-creates/s variant; verify that both reports are saved in `runs/`
+- [x] 8.1 Run the full chaos test (10,000 jobs, 8 workers) in `none` mode with at least 3 different seeds; verify that the logs are in `runs/` and that failures are investigated and kept, not rerun until green
+- [x] 8.2 Run `naive-claim` and `no-fencing` at least once each; verify that each run reports "expected failure: caught", or record honestly that it was not caught and why
+- [x] 8.3 Run the load mode at 100 RPS with the fixed mix for 5 minutes, and the 100-creates/s variant; verify that both reports are saved in `runs/`
 - [ ] 8.4 **(stretch)** Run `worker-clock-lease`; verify that I10 catches it and the log is kept
 - [ ] 8.5 **(stretch)** Run the real clock-skew chaos run (libfaketime +1 h on half the workers); verify that the log shows the skew and all invariants pass
 
 ## 9. Written deliverables
 
-- [ ] 9.1 Write the one-page `docs/design.md`: claiming, dead-worker detection, cancel of a running job, the guarantee and why; verify it fits on one page and matches the code
-- [ ] 9.2 Write `docs/silent-failures.md`: double claim, zombie, cancel/complete race, request retry, isolation level, clock skew, silent timer death, hung execution, each with the protection and the exact test or run that checks it, and note that fencing is the second line of defense behind I9 for double claims; verify every reference points to an existing test or log
-- [ ] 9.3 Write `docs/chaos.md`: how to run the harness, the number of runs, a summary table linking every raw log, the expected ~3 innocent `failed` jobs per run, and what the harness does NOT catch (API and Postgres crashes, network faults, DB clock jumps, the ~1 ms commit race left to task 2.5, external effects); verify each listed log exists
-- [ ] 9.4 Write `docs/verdict.md`: SHIP or DON'T SHIP at 100 RPS against the pre-registered criteria, the Little's-law capacity math for 100 creates/s, and what to fix first; verify the numbers match the saved reports
+- [x] 9.1 Write the one-page `docs/design.md`: claiming, dead-worker detection, cancel of a running job, the guarantee and why; verify it fits on one page and matches the code
+- [x] 9.2 Write `docs/silent-failures.md`: double claim, zombie, cancel/complete race, request retry, isolation level, clock skew, silent timer death, hung execution, each with the protection and the exact test or run that checks it, and note that fencing is the second line of defense behind I9 for double claims; verify every reference points to an existing test or log
+- [x] 9.3 Write `docs/chaos.md`: how to run the harness, the number of runs, a summary table linking every raw log, the expected ~3 innocent `failed` jobs per run, and what the harness does NOT catch (API and Postgres crashes, network faults, DB clock jumps, the ~1 ms commit race left to task 2.5, external effects); verify each listed log exists
+- [x] 9.4 Write `docs/verdict.md`: SHIP or DON'T SHIP at 100 RPS against the pre-registered criteria, the Little's-law capacity math for 100 creates/s, and what to fix first; verify the numbers match the saved reports
 - [ ] 9.5 Add the paragraph on what surprised the author and what still concerns them, and update `AI_USAGE.md` with skills used, accepted suggestions and the verification log; verify the author reviewed and edited both
 
 ## Workflow follow-up

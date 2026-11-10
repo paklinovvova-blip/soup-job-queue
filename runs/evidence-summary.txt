@@ -1,0 +1,9 @@
+evidence runs started 2026-11-10T14:21:59Z at revision 151c030
+chaos none seed 1            exit=0  runs/20261110T142159Z-none-seed1.log  PASS: all invariants held and the faults reached the dangerous paths
+chaos none seed 2            exit=0  runs/20261110T143320Z-none-seed2.log  PASS: all invariants held and the faults reached the dangerous paths
+chaos none seed 3            exit=0  runs/20261110T144446Z-none-seed3.log  PASS: all invariants held and the faults reached the dangerous paths
+mutant naive-claim           exit=0  runs/20261110T145612Z-naive-claim-seed4.log  EXPECTED FAILURE: CAUGHT. Mutant naive-claim violated [I8, I9] (expected I9)
+mutant no-fencing            exit=0  runs/20261110T150738Z-no-fencing-seed5.log  EXPECTED FAILURE: CAUGHT. Mutant no-fencing violated [I2, I3, I5, I7, I9] (expected I2 or I5)
+load 100 rps mixed           exit=0  runs/20261110T151905Z-load-seed1.log  SHIP at this load and mix
+load 100 creates/s           exit=0  runs/20261110T152423Z-load-creates-seed1.log  DON'T SHIP at this load and mix
+evidence runs finished 2026-11-10T15:29:41Z

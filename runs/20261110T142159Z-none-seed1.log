@@ -1,0 +1,1211 @@
+
+==== RUN ===================================================================
+config:   Config[mode=chaos, mutant=none, jobs=10000, rate=15.0, seed=1, workers=8, killEvery=PT2S, pauseEvery=PT15S, lease=PT5S, timeout=PT15M, faultWindow=0.95, fresh=true, dryRun=false, api=http://localhost:8080, dbUrl=jdbc:postgresql://localhost:55432/queue, dbUser=queue, dbPassword=queue, runsDir=runs, loadRps=100, loadDuration=PT5M, loadMix=default]
+revision: 151c030
+note:     the seed fixes the workload and the fault schedule; thread scheduling and timing are not reproducible
+[    0.0s] docker compose down -v
+[    0.3s] docker compose up --scale worker=8 (QUEUE_MUTANT=none)
+[    9.5s] workers started: 8 of 8
+[    9.5s] schema check: effects primary key present=true, expected=true
+[    9.6s] worker containers: 2500382a55e7 6eb6ce2c5383 b78e7632249a 5f0cd3841e9b e3adb402ddbb 8690d28c2602 871cea6d2048 c47f8fad68a9
+plan:     keys=10000 with-duplicates=3186 (31.9%) concurrent-groups=1534 delayed-retries=2550 conflicting-resends=83 random-cancels=496 targeted-cancels=521
+
+==== CHAOS =================================================================
+[   12.3s] fault KILL    e3adb402ddbb executing=true 
+[   14.2s] fault KILL    871cea6d2048 executing=false 
+[   16.3s] fault KILL    e3adb402ddbb executing=true 
+[   18.5s] fault KILL    6eb6ce2c5383 executing=true 
+[   19.7s] progress: submitted=151 jobs={cancelled=5, queued=2, running=7, succeeded=137} kills=4 pauses=0 targeted-cancels-sent=5
+[   21.0s] fault KILL    c47f8fad68a9 executing=true 
+[   21.8s] fault PAUSE   2500382a55e7 executing=true for 8000ms
+[   23.5s] fault KILL    e3adb402ddbb executing=true 
+[   25.6s] fault KILL    8690d28c2602 executing=true 
+[   27.7s] fault KILL    6eb6ce2c5383 executing=false 
+[   29.7s] progress: submitted=301 jobs={cancelled=10, queued=2, running=4, succeeded=285} kills=8 pauses=1 targeted-cancels-sent=12
+[   29.7s] fault KILL    b78e7632249a executing=true 
+[   32.0s] fault KILL    8690d28c2602 executing=true 
+[   34.2s] fault KILL    e3adb402ddbb executing=true 
+[   35.5s] fault PAUSE   8690d28c2602 executing=true for 8000ms
+[   36.7s] fault KILL    b78e7632249a executing=true 
+[   38.4s] fault KILL    e3adb402ddbb executing=true 
+[   39.7s] progress: submitted=451 jobs={cancelled=12, queued=1, running=7, succeeded=431} kills=13 pauses=2 targeted-cancels-sent=16
+[   39.9s] fault KILL    b78e7632249a executing=true 
+[   42.6s] fault KILL    c47f8fad68a9 executing=true 
+[   44.1s] fault KILL    8690d28c2602 executing=true 
+[   46.5s] fault KILL    871cea6d2048 executing=true 
+[   48.5s] fault KILL    c47f8fad68a9 executing=true 
+[   49.7s] progress: submitted=601 jobs={cancelled=19, queued=1, running=5, succeeded=576} kills=18 pauses=2 targeted-cancels-sent=23
+[   50.1s] fault KILL    c47f8fad68a9 executing=true 
+[   52.5s] fault KILL    871cea6d2048 executing=true 
+[   53.7s] fault PAUSE   e3adb402ddbb executing=true for 8000ms
+[   54.7s] fault KILL    2500382a55e7 executing=true 
+[   57.3s] fault KILL    871cea6d2048 executing=true 
+[   59.6s] fault KILL    c47f8fad68a9 executing=true 
+[   59.9s] progress: submitted=754 jobs={cancelled=26, queued=2, running=5, succeeded=720} kills=23 pauses=3 targeted-cancels-sent=30
+[   61.6s] fault KILL    8690d28c2602 executing=true 
+[   64.0s] fault KILL    2500382a55e7 executing=false 
+[   66.4s] fault KILL    c47f8fad68a9 executing=true 
+[   67.3s] fault PAUSE   2500382a55e7 executing=true for 8000ms
+[   68.3s] fault KILL    6eb6ce2c5383 executing=true 
+[   69.9s] progress: submitted=904 jobs={cancelled=34, queued=3, running=7, succeeded=860} kills=27 pauses=4 targeted-cancels-sent=37
+[   70.4s] fault KILL    e3adb402ddbb executing=true 
+[   72.0s] fault KILL    5f0cd3841e9b executing=true 
+[   74.2s] fault KILL    e3adb402ddbb executing=true 
+[   75.8s] fault KILL    c47f8fad68a9 executing=true 
+[   78.2s] fault KILL    2500382a55e7 executing=true 
+[   79.9s] progress: submitted=1054 jobs={cancelled=42, running=7, succeeded=1005} kills=32 pauses=4 targeted-cancels-sent=46
+[   80.1s] fault KILL    b78e7632249a executing=true 
+[   81.0s] fault PAUSE   5f0cd3841e9b executing=true for 8000ms
+[   82.4s] fault KILL    e3adb402ddbb executing=true 
+[   84.6s] fault KILL    e3adb402ddbb executing=true 
+[   86.7s] fault KILL    871cea6d2048 executing=true 
+[   88.3s] fault KILL    e3adb402ddbb executing=true 
+[   89.9s] progress: submitted=1204 jobs={cancelled=50, running=7, succeeded=1147} kills=37 pauses=5 targeted-cancels-sent=53
+[   90.7s] fault KILL    e3adb402ddbb executing=true 
+[   92.4s] fault KILL    c47f8fad68a9 executing=true 
+[   95.0s] fault KILL    5f0cd3841e9b executing=true 
+[   96.5s] fault KILL    c47f8fad68a9 executing=true 
+[   97.7s] fault PAUSE   5f0cd3841e9b executing=true for 8000ms
+[   99.2s] fault KILL    2500382a55e7 executing=true 
+[   99.9s] progress: submitted=1354 jobs={cancelled=55, queued=1, running=7, succeeded=1291} kills=42 pauses=6 targeted-cancels-sent=59
+[  100.9s] fault KILL    e3adb402ddbb executing=true 
+[  103.2s] fault KILL    b78e7632249a executing=false 
+[  105.0s] fault KILL    e3adb402ddbb executing=true 
+[  107.7s] fault KILL    871cea6d2048 executing=true 
+[  109.9s] progress: submitted=1504 jobs={cancelled=58, queued=3, running=7, succeeded=1436} kills=46 pauses=6 targeted-cancels-sent=62
+[  110.1s] fault KILL    c47f8fad68a9 executing=true 
+[  112.0s] fault KILL    8690d28c2602 executing=true 
+[  114.0s] fault KILL    b78e7632249a executing=true 
+[  115.2s] fault PAUSE   c47f8fad68a9 executing=true for 8000ms
+[  116.3s] fault KILL    6eb6ce2c5383 executing=true 
+[  117.8s] fault KILL    e3adb402ddbb executing=true 
+[  119.9s] fault KILL    e3adb402ddbb executing=true 
+[  119.9s] progress: submitted=1655 jobs={cancelled=59, queued=1, running=7, succeeded=1588} kills=52 pauses=7 targeted-cancels-sent=66
+[  121.7s] fault KILL    e3adb402ddbb executing=true 
+[  123.3s] fault KILL    871cea6d2048 executing=true 
+[  125.2s] fault KILL    871cea6d2048 executing=true 
+[  127.4s] fault PAUSE   8690d28c2602 executing=true for 8000ms
+[  127.5s] fault KILL    5f0cd3841e9b executing=true 
+[  129.9s] fault KILL    e3adb402ddbb executing=true 
+[  129.9s] progress: submitted=1805 jobs={cancelled=64, queued=1, running=8, succeeded=1732} kills=57 pauses=8 targeted-cancels-sent=73
+[  131.8s] fault KILL    b78e7632249a executing=true 
+[  134.0s] fault KILL    e3adb402ddbb executing=true 
+[  136.2s] fault KILL    b78e7632249a executing=true 
+[  137.9s] fault KILL    8690d28c2602 executing=true 
+[  140.0s] progress: submitted=1955 jobs={cancelled=69, running=6, succeeded=1880} kills=61 pauses=8 targeted-cancels-sent=83
+[  140.4s] fault KILL    e3adb402ddbb executing=true 
+[  142.4s] fault KILL    2500382a55e7 executing=true 
+[  145.1s] fault KILL    2500382a55e7 executing=true 
+[  146.8s] fault KILL    e3adb402ddbb executing=true 
+[  146.9s] fault PAUSE   5f0cd3841e9b executing=true for 8000ms
+[  148.4s] fault KILL    b78e7632249a executing=true 
+[  150.0s] progress: submitted=2105 jobs={cancelled=78, queued=1, running=7, succeeded=2019} kills=66 pauses=9 targeted-cancels-sent=91
+[  150.2s] fault KILL    e3adb402ddbb executing=true 
+[  152.8s] fault KILL    e3adb402ddbb executing=true 
+[  154.4s] fault KILL    2500382a55e7 executing=true 
+[  156.8s] fault KILL    2500382a55e7 executing=true 
+[  157.0s] fault PAUSE   e3adb402ddbb executing=true for 8000ms
+[  158.9s] fault KILL    2500382a55e7 executing=true 
+[  160.0s] progress: submitted=2256 jobs={cancelled=81, queued=2, running=7, succeeded=2166} kills=71 pauses=10 targeted-cancels-sent=94
+[  161.0s] fault KILL    8690d28c2602 executing=true 
+[  162.8s] fault KILL    2500382a55e7 executing=true 
+[  165.0s] fault KILL    6eb6ce2c5383 executing=true 
+[  166.9s] fault KILL    2500382a55e7 executing=true 
+[  169.1s] fault KILL    5f0cd3841e9b executing=true 
+[  169.7s] fault PAUSE   c47f8fad68a9 executing=true for 8000ms
+[  170.0s] progress: submitted=2406 jobs={cancelled=86, queued=1, running=7, succeeded=2312} kills=76 pauses=11 targeted-cancels-sent=101
+[  170.7s] fault KILL    b78e7632249a executing=true 
+[  172.3s] fault KILL    6eb6ce2c5383 executing=true 
+[  174.2s] fault KILL    6eb6ce2c5383 executing=true 
+[  176.5s] fault KILL    b78e7632249a executing=true 
+[  178.9s] fault KILL    5f0cd3841e9b executing=false 
+[  180.0s] progress: submitted=2556 jobs={cancelled=89, running=5, succeeded=2462} kills=81 pauses=11 targeted-cancels-sent=106
+[  181.2s] fault KILL    e3adb402ddbb executing=true 
+[  182.5s] fault PAUSE   871cea6d2048 executing=true for 8000ms
+[  182.8s] fault KILL    2500382a55e7 executing=true 
+[  184.6s] fault KILL    c47f8fad68a9 executing=true 
+[  186.6s] fault KILL    e3adb402ddbb executing=true 
+[  188.3s] fault KILL    8690d28c2602 executing=true 
+[  190.0s] progress: submitted=2706 jobs={cancelled=94, running=6, succeeded=2606} kills=86 pauses=12 targeted-cancels-sent=110
+[  190.2s] fault KILL    2500382a55e7 executing=true 
+[  192.1s] fault KILL    8690d28c2602 executing=true 
+[  194.0s] fault KILL    6eb6ce2c5383 executing=true 
+[  195.6s] fault KILL    871cea6d2048 executing=true 
+[  197.8s] fault KILL    871cea6d2048 executing=true 
+[  198.5s] fault PAUSE   e3adb402ddbb executing=true for 8000ms
+[  199.4s] fault KILL    c47f8fad68a9 executing=true 
+[  200.0s] progress: submitted=2856 jobs={cancelled=96, running=8, succeeded=2752} kills=92 pauses=13 targeted-cancels-sent=115
+[  201.9s] fault KILL    c47f8fad68a9 executing=true 
+[  204.5s] fault KILL    6eb6ce2c5383 executing=true 
+[  206.3s] fault KILL    871cea6d2048 executing=true 
+[  208.7s] fault KILL    6eb6ce2c5383 executing=true 
+[  210.1s] progress: submitted=3007 jobs={cancelled=99, queued=1, running=5, succeeded=2901} kills=96 pauses=13 targeted-cancels-sent=117
+[  210.9s] fault KILL    871cea6d2048 executing=true 
+[  212.7s] fault KILL    871cea6d2048 executing=true 
+[  213.0s] fault PAUSE   5f0cd3841e9b executing=true for 8000ms
+[  215.1s] fault KILL    b78e7632249a executing=true 
+[  217.7s] fault KILL    6eb6ce2c5383 executing=true 
+[  220.1s] progress: submitted=3157 jobs={cancelled=103, queued=2, running=7, succeeded=3045} kills=100 pauses=14 targeted-cancels-sent=123
+[  220.2s] fault KILL    6eb6ce2c5383 executing=true 
+[  223.0s] fault KILL    c47f8fad68a9 executing=true 
+[  225.4s] fault KILL    c47f8fad68a9 executing=false 
+[  227.4s] fault KILL    5f0cd3841e9b executing=true 
+[  229.1s] fault KILL    5f0cd3841e9b executing=true 
+[  230.1s] progress: submitted=3308 jobs={cancelled=107, queued=1, running=6, succeeded=3193} kills=105 pauses=14 targeted-cancels-sent=131
+[  231.8s] fault KILL    6eb6ce2c5383 executing=true 
+[  233.5s] fault PAUSE   e3adb402ddbb executing=true for 8000ms
+[  234.4s] fault KILL    2500382a55e7 executing=true 
+[  236.3s] fault KILL    5f0cd3841e9b executing=true 
+[  238.2s] fault KILL    b78e7632249a executing=true 
+[  239.7s] fault KILL    2500382a55e7 executing=true 
+[  240.1s] progress: submitted=3458 jobs={cancelled=109, queued=2, running=7, succeeded=3340} kills=110 pauses=15 targeted-cancels-sent=135
+[  241.3s] fault KILL    8690d28c2602 executing=true 
+[  243.7s] fault KILL    2500382a55e7 executing=true 
+[  245.7s] fault KILL    b78e7632249a executing=true 
+[  247.7s] fault KILL    c47f8fad68a9 executing=true 
+[  249.5s] fault KILL    5f0cd3841e9b executing=true 
+[  250.2s] progress: submitted=3608 jobs={cancelled=111, running=7, succeeded=3490} kills=115 pauses=15 targeted-cancels-sent=139
+[  251.9s] fault KILL    5f0cd3841e9b executing=true 
+[  252.7s] fault PAUSE   2500382a55e7 executing=true for 8000ms
+[  253.5s] fault KILL    5f0cd3841e9b executing=true 
+[  255.9s] fault KILL    8690d28c2602 executing=true 
+[  257.6s] fault KILL    871cea6d2048 executing=true 
+[  259.4s] fault KILL    6eb6ce2c5383 executing=true 
+[  260.2s] progress: submitted=3758 jobs={cancelled=114, queued=2, running=8, succeeded=3634} kills=120 pauses=16 targeted-cancels-sent=144
+[  261.8s] fault KILL    871cea6d2048 executing=true 
+[  263.6s] fault KILL    871cea6d2048 executing=true 
+[  263.9s] fault PAUSE   c47f8fad68a9 executing=true for 8000ms
+[  265.4s] fault KILL    871cea6d2048 executing=true 
+[  267.0s] fault KILL    e3adb402ddbb executing=true 
+[  269.3s] fault KILL    e3adb402ddbb executing=true 
+[  270.2s] progress: submitted=3909 jobs={cancelled=120, queued=2, running=8, succeeded=3778} kills=125 pauses=17 targeted-cancels-sent=152
+[  271.5s] fault KILL    871cea6d2048 executing=true 
+[  273.7s] fault KILL    c47f8fad68a9 executing=true 
+[  276.2s] fault KILL    c47f8fad68a9 executing=true 
+[  278.3s] fault KILL    c47f8fad68a9 executing=true 
+[  279.9s] fault KILL    5f0cd3841e9b executing=true 
+[  280.2s] progress: submitted=4059 jobs={cancelled=125, running=6, succeeded=3928} kills=130 pauses=17 targeted-cancels-sent=158
+[  282.0s] fault PAUSE   2500382a55e7 executing=true for 8000ms
+[  282.0s] fault KILL    b78e7632249a executing=true 
+[  283.8s] fault KILL    b78e7632249a executing=true 
+[  285.8s] fault KILL    b78e7632249a executing=true 
+[  287.9s] fault KILL    e3adb402ddbb executing=true 
+[  290.1s] fault KILL    5f0cd3841e9b executing=false 
+[  290.2s] progress: submitted=4209 jobs={cancelled=128, running=5, succeeded=4076} kills=135 pauses=18 targeted-cancels-sent=161
+[  292.4s] fault KILL    871cea6d2048 executing=true 
+[  294.4s] fault KILL    2500382a55e7 executing=true 
+[  296.1s] fault KILL    e3adb402ddbb executing=true 
+[  298.4s] fault KILL    2500382a55e7 executing=true 
+[  300.2s] progress: submitted=4359 jobs={cancelled=134, queued=1, running=8, succeeded=4216} kills=139 pauses=18 targeted-cancels-sent=170
+[  300.8s] fault PAUSE   871cea6d2048 executing=true for 8000ms
+[  300.8s] fault KILL    e3adb402ddbb executing=true 
+[  303.4s] fault KILL    5f0cd3841e9b executing=true 
+[  305.7s] fault KILL    2500382a55e7 executing=true 
+[  308.4s] fault KILL    e3adb402ddbb executing=true 
+[  310.2s] progress: submitted=4509 jobs={cancelled=135, queued=2, running=8, succeeded=4364} kills=143 pauses=19 targeted-cancels-sent=171
+[  311.1s] fault KILL    e3adb402ddbb executing=true 
+[  312.3s] fault PAUSE   e3adb402ddbb executing=true for 8000ms
+[  313.8s] fault KILL    6eb6ce2c5383 executing=true 
+[  316.0s] fault KILL    c47f8fad68a9 executing=true 
+[  318.5s] fault KILL    c47f8fad68a9 executing=true 
+[  320.2s] progress: submitted=4659 jobs={cancelled=136, queued=1, running=7, succeeded=4515} kills=147 pauses=20 targeted-cancels-sent=176
+[  321.0s] fault KILL    2500382a55e7 executing=true 
+[  323.3s] fault KILL    5f0cd3841e9b executing=true 
+[  326.0s] fault KILL    e3adb402ddbb executing=true 
+[  327.6s] fault PAUSE   c47f8fad68a9 executing=true for 8000ms
+[  328.4s] fault KILL    5f0cd3841e9b executing=true 
+[  330.3s] progress: submitted=4810 jobs={cancelled=140, failed=1, running=8, succeeded=4660} kills=151 pauses=21 targeted-cancels-sent=183
+[  330.9s] fault KILL    5f0cd3841e9b executing=true 
+[  333.3s] fault KILL    6eb6ce2c5383 executing=true 
+[  335.1s] fault KILL    8690d28c2602 executing=true 
+[  337.0s] fault KILL    b78e7632249a executing=false 
+[  338.6s] fault KILL    6eb6ce2c5383 executing=false 
+[  340.3s] fault KILL    e3adb402ddbb executing=true 
+[  340.3s] progress: submitted=4960 jobs={cancelled=148, failed=1, queued=3, running=6, succeeded=4802} kills=157 pauses=21 targeted-cancels-sent=191
+[  341.9s] fault KILL    8690d28c2602 executing=true 
+[  343.5s] fault KILL    5f0cd3841e9b executing=true 
+[  343.6s] fault PAUSE   2500382a55e7 executing=true for 8000ms
+[  345.5s] fault KILL    e3adb402ddbb executing=true 
+[  347.1s] fault KILL    8690d28c2602 executing=true 
+[  348.7s] fault KILL    e3adb402ddbb executing=true 
+[  350.3s] progress: submitted=5110 jobs={cancelled=155, failed=1, queued=3, running=8, succeeded=4943} kills=162 pauses=22 targeted-cancels-sent=199
+[  351.4s] fault KILL    8690d28c2602 executing=true 
+[  354.1s] fault KILL    8690d28c2602 executing=true 
+[  355.7s] fault PAUSE   c47f8fad68a9 executing=true for 8000ms
+[  356.3s] fault KILL    e3adb402ddbb executing=true 
+[  358.6s] fault KILL    5f0cd3841e9b executing=true 
+[  360.3s] progress: submitted=5260 jobs={cancelled=163, failed=1, queued=1, running=9, succeeded=5086} kills=166 pauses=23 targeted-cancels-sent=207
+[  360.6s] fault KILL    e3adb402ddbb executing=true 
+[  363.2s] fault KILL    e3adb402ddbb executing=true 
+[  365.9s] fault KILL    5f0cd3841e9b executing=true 
+[  367.6s] fault KILL    c47f8fad68a9 executing=false 
+[  369.2s] fault PAUSE   5f0cd3841e9b executing=true for 8000ms
+[  370.3s] progress: submitted=5410 jobs={cancelled=167, failed=1, queued=1, running=7, succeeded=5234} kills=170 pauses=24 targeted-cancels-sent=212
+[  370.4s] fault KILL    e3adb402ddbb executing=true 
+[  372.6s] fault KILL    b78e7632249a executing=true 
+[  374.3s] fault KILL    e3adb402ddbb executing=true 
+[  376.3s] fault KILL    8690d28c2602 executing=true 
+[  378.1s] fault KILL    871cea6d2048 executing=true 
+[  380.3s] progress: submitted=5560 jobs={cancelled=171, failed=1, running=8, succeeded=5380} kills=175 pauses=24 targeted-cancels-sent=216
+[  380.6s] fault KILL    8690d28c2602 executing=true 
+[  382.9s] fault KILL    b78e7632249a executing=true 
+[  383.9s] fault PAUSE   5f0cd3841e9b executing=true for 8000ms
+[  385.1s] fault KILL    c47f8fad68a9 executing=true 
+[  387.6s] fault KILL    c47f8fad68a9 executing=true 
+[  390.2s] fault KILL    8690d28c2602 executing=true 
+[  390.3s] progress: submitted=5711 jobs={cancelled=179, failed=1, queued=5, running=4, succeeded=5522} kills=180 pauses=25 targeted-cancels-sent=223
+[  392.2s] fault KILL    871cea6d2048 executing=true 
+[  394.9s] fault KILL    871cea6d2048 executing=true 
+[  396.6s] fault KILL    c47f8fad68a9 executing=true 
+[  398.6s] fault KILL    871cea6d2048 executing=true 
+[  400.3s] progress: submitted=5861 jobs={cancelled=183, failed=1, queued=2, running=6, succeeded=5669} kills=184 pauses=25 targeted-cancels-sent=230
+[  400.8s] fault KILL    c47f8fad68a9 executing=true 
+[  402.2s] fault PAUSE   5f0cd3841e9b executing=true for 8000ms
+[  402.4s] fault KILL    2500382a55e7 executing=true 
+[  405.0s] fault KILL    e3adb402ddbb executing=true 
+[  407.2s] fault KILL    e3adb402ddbb executing=true 
+[  408.7s] fault KILL    8690d28c2602 executing=true 
+[  410.3s] progress: submitted=6011 jobs={cancelled=189, failed=1, queued=1, running=6, succeeded=5814} kills=189 pauses=26 targeted-cancels-sent=238
+[  411.4s] fault KILL    6eb6ce2c5383 executing=true 
+[  413.4s] fault PAUSE   871cea6d2048 executing=true for 8000ms
+[  413.8s] fault KILL    c47f8fad68a9 executing=true 
+[  415.8s] fault KILL    c47f8fad68a9 executing=true 
+[  417.4s] fault KILL    8690d28c2602 executing=true 
+[  419.7s] fault KILL    6eb6ce2c5383 executing=true 
+[  420.4s] progress: submitted=6161 jobs={cancelled=191, failed=1, running=7, succeeded=5962} kills=194 pauses=27 targeted-cancels-sent=244
+[  421.7s] fault KILL    6eb6ce2c5383 executing=true 
+[  424.0s] fault KILL    c47f8fad68a9 executing=true 
+[  426.7s] fault KILL    871cea6d2048 executing=true 
+[  428.4s] fault KILL    e3adb402ddbb executing=true 
+[  429.6s] fault PAUSE   e3adb402ddbb executing=true for 8000ms
+[  430.4s] progress: submitted=6311 jobs={cancelled=196, failed=1, queued=2, running=9, succeeded=6103} kills=198 pauses=28 targeted-cancels-sent=251
+[  430.5s] fault KILL    8690d28c2602 executing=true 
+[  433.2s] fault KILL    2500382a55e7 executing=true 
+[  435.9s] fault KILL    2500382a55e7 executing=true 
+[  437.6s] fault KILL    2500382a55e7 executing=true 
+[  439.3s] fault KILL    e3adb402ddbb executing=true 
+[  440.4s] progress: submitted=6462 jobs={cancelled=200, failed=1, queued=2, running=7, succeeded=6252} kills=203 pauses=28 targeted-cancels-sent=255
+[  441.2s] fault KILL    8690d28c2602 executing=true 
+[  442.9s] fault KILL    e3adb402ddbb executing=true 
+[  443.1s] fault PAUSE   c47f8fad68a9 executing=true for 8000ms
+[  445.1s] fault KILL    b78e7632249a executing=true 
+[  447.6s] fault KILL    2500382a55e7 executing=true 
+[  449.8s] fault KILL    8690d28c2602 executing=true 
+[  450.4s] progress: submitted=6612 jobs={cancelled=205, failed=1, queued=2, running=7, succeeded=6397} kills=208 pauses=29 targeted-cancels-sent=259
+[  452.0s] fault KILL    b78e7632249a executing=true 
+[  454.2s] fault KILL    6eb6ce2c5383 executing=true 
+[  456.6s] fault KILL    2500382a55e7 executing=true 
+[  459.1s] fault KILL    6eb6ce2c5383 executing=true 
+[  460.4s] progress: submitted=6762 jobs={cancelled=213, failed=1, queued=3, running=6, succeeded=6539} kills=212 pauses=29 targeted-cancels-sent=267
+[  461.6s] fault PAUSE   871cea6d2048 executing=true for 8000ms
+[  461.8s] fault KILL    2500382a55e7 executing=true 
+[  464.3s] fault KILL    8690d28c2602 executing=true 
+[  466.8s] fault KILL    c47f8fad68a9 executing=true 
+[  468.7s] fault KILL    e3adb402ddbb executing=true 
+[  470.4s] progress: submitted=6912 jobs={cancelled=218, failed=1, queued=1, running=6, succeeded=6686} kills=216 pauses=30 targeted-cancels-sent=273
+[  470.5s] fault KILL    b78e7632249a executing=true 
+[  472.4s] fault PAUSE   b78e7632249a executing=true for 8000ms
+[  472.4s] fault KILL    c47f8fad68a9 executing=true 
+[  474.4s] fault KILL    871cea6d2048 executing=true 
+[  476.7s] fault KILL    c47f8fad68a9 executing=true 
+[  478.9s] fault KILL    e3adb402ddbb executing=true 
+[  480.5s] progress: submitted=7063 jobs={cancelled=222, failed=1, queued=2, running=6, succeeded=6831} kills=221 pauses=31 targeted-cancels-sent=280
+[  481.5s] fault KILL    b78e7632249a executing=true 
+[  483.7s] fault KILL    8690d28c2602 executing=true 
+[  486.3s] fault KILL    b78e7632249a executing=true 
+[  487.9s] fault PAUSE   b78e7632249a executing=true for 8000ms
+[  487.9s] fault KILL    2500382a55e7 executing=true 
+[  490.4s] fault KILL    e3adb402ddbb executing=true 
+[  490.5s] progress: submitted=7213 jobs={cancelled=229, failed=1, queued=2, running=5, succeeded=6976} kills=226 pauses=32 targeted-cancels-sent=288
+[  492.8s] fault KILL    5f0cd3841e9b executing=true 
+[  494.6s] fault KILL    e3adb402ddbb executing=true 
+[  496.9s] fault KILL    6eb6ce2c5383 executing=true 
+[  499.4s] fault KILL    c47f8fad68a9 executing=true 
+[  500.5s] progress: submitted=7363 jobs={cancelled=232, failed=2, running=7, succeeded=7122} kills=230 pauses=32 targeted-cancels-sent=291
+[  501.5s] fault KILL    e3adb402ddbb executing=true 
+[  503.5s] fault KILL    871cea6d2048 executing=true 
+[  505.5s] fault KILL    8690d28c2602 executing=true 
+[  506.3s] fault PAUSE   b78e7632249a executing=true for 8000ms
+[  507.7s] fault KILL    6eb6ce2c5383 executing=true 
+[  509.4s] fault KILL    5f0cd3841e9b executing=true 
+[  510.5s] progress: submitted=7513 jobs={cancelled=236, failed=2, queued=2, running=7, succeeded=7266} kills=235 pauses=33 targeted-cancels-sent=299
+[  511.8s] fault KILL    2500382a55e7 executing=true 
+[  514.0s] fault KILL    5f0cd3841e9b executing=true 
+[  516.4s] fault KILL    6eb6ce2c5383 executing=true 
+[  518.3s] fault KILL    2500382a55e7 executing=false 
+[  520.1s] fault KILL    e3adb402ddbb executing=true 
+[  520.5s] progress: submitted=7663 jobs={cancelled=240, failed=2, running=6, succeeded=7415} kills=240 pauses=33 targeted-cancels-sent=305
+[  520.6s] fault PAUSE   c47f8fad68a9 executing=true for 8000ms
+[  521.6s] fault KILL    e3adb402ddbb executing=true 
+[  523.8s] fault KILL    6eb6ce2c5383 executing=true 
+[  525.4s] fault KILL    8690d28c2602 executing=true 
+[  527.8s] fault KILL    b78e7632249a executing=true 
+[  530.5s] fault KILL    2500382a55e7 executing=true 
+[  530.5s] progress: submitted=7814 jobs={cancelled=244, failed=3, queued=1, running=5, succeeded=7561} kills=245 pauses=34 targeted-cancels-sent=311
+[  532.6s] fault KILL    b78e7632249a executing=true 
+[  534.4s] fault KILL    6eb6ce2c5383 executing=true 
+[  534.6s] fault PAUSE   2500382a55e7 executing=true for 8000ms
+[  537.1s] fault KILL    8690d28c2602 executing=true 
+[  539.1s] fault KILL    8690d28c2602 executing=true 
+[  540.5s] progress: submitted=7964 jobs={cancelled=249, failed=3, queued=1, running=6, succeeded=7705} kills=249 pauses=35 targeted-cancels-sent=317
+[  540.9s] fault KILL    871cea6d2048 executing=true 
+[  542.8s] fault KILL    6eb6ce2c5383 executing=true 
+[  544.4s] fault KILL    6eb6ce2c5383 executing=true 
+[  546.8s] fault KILL    b78e7632249a executing=true 
+[  549.3s] fault KILL    6eb6ce2c5383 executing=true 
+[  550.6s] progress: submitted=8114 jobs={cancelled=253, failed=4, running=9, succeeded=7848} kills=254 pauses=35 targeted-cancels-sent=321
+[  551.2s] fault PAUSE   8690d28c2602 executing=true for 8000ms
+[  551.3s] fault KILL    5f0cd3841e9b executing=true 
+[  553.4s] fault KILL    6eb6ce2c5383 executing=true 
+[  555.5s] fault KILL    c47f8fad68a9 executing=true 
+[  557.6s] fault KILL    c47f8fad68a9 executing=true 
+[  559.9s] fault KILL    2500382a55e7 executing=true 
+[  560.6s] progress: submitted=8264 jobs={cancelled=260, failed=4, queued=1, running=7, succeeded=7992} kills=259 pauses=36 targeted-cancels-sent=325
+[  562.0s] fault KILL    2500382a55e7 executing=true 
+[  563.4s] fault PAUSE   b78e7632249a executing=true for 8000ms
+[  564.5s] fault KILL    2500382a55e7 executing=true 
+[  566.4s] fault KILL    6eb6ce2c5383 executing=true 
+[  569.0s] fault KILL    2500382a55e7 executing=true 
+[  570.6s] progress: submitted=8414 jobs={cancelled=261, failed=4, queued=3, running=7, succeeded=8139} kills=263 pauses=37 targeted-cancels-sent=328
+[  570.7s] fault KILL    c47f8fad68a9 executing=true 
+[  572.8s] fault KILL    871cea6d2048 executing=false 
+[  574.9s] fault KILL    c47f8fad68a9 executing=true 
+[  576.7s] fault KILL    6eb6ce2c5383 executing=true 
+[  579.1s] fault KILL    6eb6ce2c5383 executing=true 
+[  580.6s] progress: submitted=8565 jobs={cancelled=266, failed=4, queued=2, running=6, succeeded=8287} kills=268 pauses=37 targeted-cancels-sent=335
+[  580.7s] fault KILL    b78e7632249a executing=true 
+[  581.9s] fault PAUSE   e3adb402ddbb executing=true for 8000ms
+[  583.2s] fault KILL    5f0cd3841e9b executing=true 
+[  585.3s] fault KILL    8690d28c2602 executing=true 
+[  587.1s] fault KILL    8690d28c2602 executing=true 
+[  589.2s] fault KILL    b78e7632249a executing=true 
+[  590.6s] progress: submitted=8715 jobs={cancelled=272, failed=4, queued=1, running=7, succeeded=8431} kills=273 pauses=38 targeted-cancels-sent=341
+[  591.2s] fault KILL    5f0cd3841e9b executing=true 
+[  593.3s] fault KILL    5f0cd3841e9b executing=true 
+[  595.4s] fault KILL    e3adb402ddbb executing=true 
+[  597.6s] fault KILL    6eb6ce2c5383 executing=true 
+[  599.2s] fault KILL    871cea6d2048 executing=true 
+[  600.6s] progress: submitted=8865 jobs={cancelled=277, failed=4, running=9, succeeded=8575} kills=278 pauses=38 targeted-cancels-sent=347
+[  601.2s] fault PAUSE   2500382a55e7 executing=true for 8000ms
+[  601.5s] fault KILL    c47f8fad68a9 executing=true 
+[  603.9s] fault KILL    e3adb402ddbb executing=true 
+[  606.2s] fault KILL    8690d28c2602 executing=true 
+[  608.6s] fault KILL    871cea6d2048 executing=true 
+[  610.7s] progress: submitted=9016 jobs={cancelled=281, failed=4, queued=2, running=7, succeeded=8722} kills=282 pauses=39 targeted-cancels-sent=351
+[  611.3s] fault KILL    871cea6d2048 executing=true 
+[  613.3s] fault KILL    2500382a55e7 executing=true 
+[  614.9s] fault PAUSE   e3adb402ddbb executing=true for 8000ms
+[  615.6s] fault KILL    b78e7632249a executing=true 
+[  617.6s] fault KILL    6eb6ce2c5383 executing=true 
+[  619.9s] fault KILL    6eb6ce2c5383 executing=true 
+[  620.7s] progress: submitted=9166 jobs={cancelled=282, failed=4, queued=1, running=9, succeeded=8870} kills=287 pauses=40 targeted-cancels-sent=359
+[  621.5s] fault KILL    871cea6d2048 executing=true 
+[  623.9s] fault KILL    6eb6ce2c5383 executing=true 
+[  625.8s] fault KILL    8690d28c2602 executing=true 
+[  627.1s] fault PAUSE   5f0cd3841e9b executing=true for 8000ms
+[  628.5s] fault KILL    e3adb402ddbb executing=false 
+[  630.7s] progress: submitted=9316 jobs={cancelled=287, failed=4, queued=2, running=7, succeeded=9016} kills=291 pauses=41 targeted-cancels-sent=372
+[  630.8s] fault KILL    8690d28c2602 executing=true 
+[  632.9s] fault KILL    e3adb402ddbb executing=true 
+[  634.8s] fault KILL    6eb6ce2c5383 executing=true 
+[  636.5s] fault KILL    e3adb402ddbb executing=true 
+[  638.1s] fault KILL    871cea6d2048 executing=true 
+[  640.3s] fault KILL    b78e7632249a executing=true 
+[  640.6s] fault PAUSE   6eb6ce2c5383 executing=true for 8000ms
+[  640.7s] progress: submitted=9466 jobs={cancelled=291, failed=4, running=7, succeeded=9164} kills=297 pauses=42 targeted-cancels-sent=379
+[  642.3s] fault KILL    2500382a55e7 executing=true 
+[  644.3s] fault KILL    2500382a55e7 executing=true 
+[  647.0s] fault KILL    b78e7632249a executing=true 
+[  649.5s] fault KILL    b78e7632249a executing=true 
+[  650.7s] progress: submitted=9616 jobs={cancelled=299, failed=4, running=6, succeeded=9307} kills=301 pauses=42 targeted-cancels-sent=388
+[  651.0s] fault KILL    8690d28c2602 executing=true 
+[  653.2s] fault KILL    871cea6d2048 executing=true 
+[  655.9s] fault KILL    b78e7632249a executing=true 
+[  656.0s] fault PAUSE   5f0cd3841e9b executing=true for 8000ms
+[  658.5s] fault KILL    871cea6d2048 executing=true 
+[  660.4s] fault KILL    2500382a55e7 executing=true 
+[  660.7s] progress: submitted=9767 jobs={cancelled=302, failed=4, queued=2, running=9, succeeded=9450} kills=306 pauses=43 targeted-cancels-sent=392
+[  662.8s] fault KILL    2500382a55e7 executing=true 
+[  664.9s] fault KILL    e3adb402ddbb executing=true 
+[  667.3s] fault KILL    e3adb402ddbb executing=true 
+[  670.0s] fault KILL    e3adb402ddbb executing=true 
+[  670.7s] progress: submitted=9917 jobs={cancelled=309, failed=4, queued=2, running=7, succeeded=9595} kills=310 pauses=43 targeted-cancels-sent=401
+[  671.6s] fault KILL    5f0cd3841e9b executing=true 
+[  674.2s] fault KILL    6eb6ce2c5383 executing=true 
+[  675.3s] fault PAUSE   5f0cd3841e9b executing=true for 8000ms
+[  676.8s] fault KILL    6eb6ce2c5383 executing=true 
+[  679.4s] fault KILL    b78e7632249a executing=false 
+[  679.8s] all 10000 keys and their follow-ups sent
+[  679.8s] fault window over (100.0% terminal), stopping faults and healing workers
+[  680.2s] waiting for quiescence (timeout 15m0s)
+
+==== FAULT LOG =============================================================
+    12.3s KILL    e3adb402ddbb executing=true  
+    13.9s START   e3adb402ddbb executing=false after 1480ms
+    14.2s KILL    871cea6d2048 executing=false 
+    15.3s START   871cea6d2048 executing=false after 938ms
+    16.3s KILL    e3adb402ddbb executing=true  
+    17.6s START   e3adb402ddbb executing=false after 1209ms
+    18.5s KILL    6eb6ce2c5383 executing=true  
+    19.8s START   6eb6ce2c5383 executing=false after 1237ms
+    21.0s KILL    c47f8fad68a9 executing=true  
+    21.8s PAUSE   2500382a55e7 executing=true  for 8000ms
+    22.2s START   c47f8fad68a9 executing=false after 1134ms
+    23.5s KILL    e3adb402ddbb executing=true  
+    25.0s START   e3adb402ddbb executing=false after 1333ms
+    25.6s KILL    8690d28c2602 executing=true  
+    26.5s START   8690d28c2602 executing=false after 805ms
+    27.7s KILL    6eb6ce2c5383 executing=false 
+    29.0s START   6eb6ce2c5383 executing=false after 1145ms
+    29.7s KILL    b78e7632249a executing=true  
+    29.9s UNPAUSE 2500382a55e7 executing=false 
+    30.8s START   b78e7632249a executing=false after 959ms
+    32.0s KILL    8690d28c2602 executing=true  
+    32.7s START   8690d28c2602 executing=false after 597ms
+    34.2s KILL    e3adb402ddbb executing=true  
+    35.5s PAUSE   8690d28c2602 executing=true  for 8000ms
+    35.6s START   e3adb402ddbb executing=false after 1254ms
+    36.7s KILL    b78e7632249a executing=true  
+    37.9s START   b78e7632249a executing=false after 1085ms
+    38.4s KILL    e3adb402ddbb executing=true  
+    39.3s START   e3adb402ddbb executing=false after 840ms
+    39.9s KILL    b78e7632249a executing=true  
+    41.3s START   b78e7632249a executing=false after 1315ms
+    42.6s KILL    c47f8fad68a9 executing=true  
+    43.5s UNPAUSE 8690d28c2602 executing=false 
+    43.8s START   c47f8fad68a9 executing=false after 1111ms
+    44.1s KILL    8690d28c2602 executing=true  
+    45.0s START   8690d28c2602 executing=false after 782ms
+    46.5s KILL    871cea6d2048 executing=true  
+    47.3s START   871cea6d2048 executing=false after 749ms
+    48.5s KILL    c47f8fad68a9 executing=true  
+    49.2s START   c47f8fad68a9 executing=false after 593ms
+    50.1s KILL    c47f8fad68a9 executing=true  
+    51.0s START   c47f8fad68a9 executing=false after 839ms
+    52.5s KILL    871cea6d2048 executing=true  
+    53.6s START   871cea6d2048 executing=false after 953ms
+    53.7s PAUSE   e3adb402ddbb executing=true  for 8000ms
+    54.7s KILL    2500382a55e7 executing=true  
+    56.0s START   2500382a55e7 executing=false after 1119ms
+    57.3s KILL    871cea6d2048 executing=true  
+    58.7s START   871cea6d2048 executing=false after 1253ms
+    59.6s KILL    c47f8fad68a9 executing=true  
+    60.7s START   c47f8fad68a9 executing=false after 1019ms
+    61.6s KILL    8690d28c2602 executing=true  
+    61.8s UNPAUSE e3adb402ddbb executing=false 
+    62.6s START   8690d28c2602 executing=false after 813ms
+    64.0s KILL    2500382a55e7 executing=false 
+    65.5s START   2500382a55e7 executing=false after 1386ms
+    66.4s KILL    c47f8fad68a9 executing=true  
+    67.1s START   c47f8fad68a9 executing=false after 549ms
+    67.3s PAUSE   2500382a55e7 executing=true  for 8000ms
+    68.3s KILL    6eb6ce2c5383 executing=true  
+    69.3s START   6eb6ce2c5383 executing=false after 943ms
+    70.4s KILL    e3adb402ddbb executing=true  
+    71.8s START   e3adb402ddbb executing=false after 1298ms
+    72.0s KILL    5f0cd3841e9b executing=true  
+    73.2s START   5f0cd3841e9b executing=false after 1173ms
+    74.2s KILL    e3adb402ddbb executing=true  
+    74.8s START   e3adb402ddbb executing=false after 518ms
+    75.3s UNPAUSE 2500382a55e7 executing=false 
+    75.8s KILL    c47f8fad68a9 executing=true  
+    77.2s START   c47f8fad68a9 executing=false after 1296ms
+    78.2s KILL    2500382a55e7 executing=true  
+    79.0s START   2500382a55e7 executing=false after 738ms
+    80.1s KILL    b78e7632249a executing=true  
+    81.0s PAUSE   5f0cd3841e9b executing=true  for 8000ms
+    81.7s START   b78e7632249a executing=false after 1472ms
+    82.4s KILL    e3adb402ddbb executing=true  
+    83.4s START   e3adb402ddbb executing=false after 875ms
+    84.6s KILL    e3adb402ddbb executing=true  
+    85.4s START   e3adb402ddbb executing=false after 684ms
+    86.7s KILL    871cea6d2048 executing=true  
+    87.6s START   871cea6d2048 executing=false after 753ms
+    88.3s KILL    e3adb402ddbb executing=true  
+    89.0s START   e3adb402ddbb executing=false after 596ms
+    89.0s UNPAUSE 5f0cd3841e9b executing=false 
+    90.7s KILL    e3adb402ddbb executing=true  
+    91.9s START   e3adb402ddbb executing=false after 1049ms
+    92.4s KILL    c47f8fad68a9 executing=true  
+    93.5s START   c47f8fad68a9 executing=false after 951ms
+    95.0s KILL    5f0cd3841e9b executing=true  
+    96.2s START   5f0cd3841e9b executing=false after 1096ms
+    96.5s KILL    c47f8fad68a9 executing=true  
+    97.5s START   c47f8fad68a9 executing=false after 894ms
+    97.7s PAUSE   5f0cd3841e9b executing=true  for 8000ms
+    99.2s KILL    2500382a55e7 executing=true  
+   100.1s START   2500382a55e7 executing=false after 752ms
+   100.9s KILL    e3adb402ddbb executing=true  
+   102.3s START   e3adb402ddbb executing=false after 1270ms
+   103.2s KILL    b78e7632249a executing=false 
+   104.2s START   b78e7632249a executing=false after 824ms
+   105.0s KILL    e3adb402ddbb executing=true  
+   105.7s UNPAUSE 5f0cd3841e9b executing=false 
+   106.0s START   e3adb402ddbb executing=false after 838ms
+   107.7s KILL    871cea6d2048 executing=true  
+   108.5s START   871cea6d2048 executing=false after 708ms
+   110.1s KILL    c47f8fad68a9 executing=true  
+   111.2s START   c47f8fad68a9 executing=false after 955ms
+   112.0s KILL    8690d28c2602 executing=true  
+   113.3s START   8690d28c2602 executing=false after 1166ms
+   114.0s KILL    b78e7632249a executing=true  
+   114.9s START   b78e7632249a executing=false after 786ms
+   115.2s PAUSE   c47f8fad68a9 executing=true  for 8000ms
+   116.3s KILL    6eb6ce2c5383 executing=true  
+   117.0s START   6eb6ce2c5383 executing=false after 601ms
+   117.8s KILL    e3adb402ddbb executing=true  
+   119.3s START   e3adb402ddbb executing=false after 1399ms
+   119.9s KILL    e3adb402ddbb executing=true  
+   120.5s START   e3adb402ddbb executing=false after 514ms
+   121.7s KILL    e3adb402ddbb executing=true  
+   122.5s START   e3adb402ddbb executing=false after 655ms
+   123.3s UNPAUSE c47f8fad68a9 executing=false 
+   123.3s KILL    871cea6d2048 executing=true  
+   124.1s START   871cea6d2048 executing=false after 717ms
+   125.2s KILL    871cea6d2048 executing=true  
+   126.4s START   871cea6d2048 executing=false after 1107ms
+   127.4s PAUSE   8690d28c2602 executing=true  for 8000ms
+   127.5s KILL    5f0cd3841e9b executing=true  
+   128.6s START   5f0cd3841e9b executing=false after 972ms
+   129.9s KILL    e3adb402ddbb executing=true  
+   131.1s START   e3adb402ddbb executing=false after 1004ms
+   131.8s KILL    b78e7632249a executing=true  
+   132.5s START   b78e7632249a executing=false after 599ms
+   134.0s KILL    e3adb402ddbb executing=true  
+   135.4s UNPAUSE 8690d28c2602 executing=false 
+   135.5s START   e3adb402ddbb executing=false after 1392ms
+   136.2s KILL    b78e7632249a executing=true  
+   137.8s START   b78e7632249a executing=false after 1490ms
+   137.9s KILL    8690d28c2602 executing=true  
+   138.5s START   8690d28c2602 executing=false after 566ms
+   140.4s KILL    e3adb402ddbb executing=true  
+   141.2s START   e3adb402ddbb executing=false after 607ms
+   142.4s KILL    2500382a55e7 executing=true  
+   143.3s START   2500382a55e7 executing=false after 800ms
+   145.1s KILL    2500382a55e7 executing=true  
+   146.7s START   2500382a55e7 executing=false after 1375ms
+   146.8s KILL    e3adb402ddbb executing=true  
+   146.9s PAUSE   5f0cd3841e9b executing=true  for 8000ms
+   147.9s START   e3adb402ddbb executing=false after 1027ms
+   148.4s KILL    b78e7632249a executing=true  
+   149.9s START   b78e7632249a executing=false after 1401ms
+   150.2s KILL    e3adb402ddbb executing=true  
+   151.7s START   e3adb402ddbb executing=false after 1455ms
+   152.8s KILL    e3adb402ddbb executing=true  
+   153.8s START   e3adb402ddbb executing=false after 882ms
+   154.4s KILL    2500382a55e7 executing=true  
+   154.9s UNPAUSE 5f0cd3841e9b executing=false 
+   155.1s START   2500382a55e7 executing=false after 595ms
+   156.8s KILL    2500382a55e7 executing=true  
+   157.0s PAUSE   e3adb402ddbb executing=true  for 8000ms
+   158.0s START   2500382a55e7 executing=false after 1129ms
+   158.9s KILL    2500382a55e7 executing=true  
+   160.4s START   2500382a55e7 executing=false after 1380ms
+   161.0s KILL    8690d28c2602 executing=true  
+   162.4s START   8690d28c2602 executing=false after 1272ms
+   162.8s KILL    2500382a55e7 executing=true  
+   164.0s START   2500382a55e7 executing=false after 1054ms
+   165.0s KILL    6eb6ce2c5383 executing=true  
+   165.1s UNPAUSE e3adb402ddbb executing=false 
+   165.8s START   6eb6ce2c5383 executing=false after 707ms
+   166.9s KILL    2500382a55e7 executing=true  
+   167.8s START   2500382a55e7 executing=false after 820ms
+   169.1s KILL    5f0cd3841e9b executing=true  
+   169.7s PAUSE   c47f8fad68a9 executing=true  for 8000ms
+   170.0s START   5f0cd3841e9b executing=false after 802ms
+   170.7s KILL    b78e7632249a executing=true  
+   172.1s START   b78e7632249a executing=false after 1308ms
+   172.3s KILL    6eb6ce2c5383 executing=true  
+   173.2s START   6eb6ce2c5383 executing=false after 776ms
+   174.2s KILL    6eb6ce2c5383 executing=true  
+   174.9s START   6eb6ce2c5383 executing=false after 624ms
+   176.5s KILL    b78e7632249a executing=true  
+   177.6s START   b78e7632249a executing=false after 985ms
+   177.7s UNPAUSE c47f8fad68a9 executing=false 
+   178.9s KILL    5f0cd3841e9b executing=false 
+   179.7s START   5f0cd3841e9b executing=false after 736ms
+   181.2s KILL    e3adb402ddbb executing=true  
+   182.5s PAUSE   871cea6d2048 executing=true  for 8000ms
+   182.6s START   e3adb402ddbb executing=false after 1272ms
+   182.8s KILL    2500382a55e7 executing=true  
+   183.7s START   2500382a55e7 executing=false after 795ms
+   184.6s KILL    c47f8fad68a9 executing=true  
+   186.1s START   c47f8fad68a9 executing=false after 1373ms
+   186.6s KILL    e3adb402ddbb executing=true  
+   188.0s START   e3adb402ddbb executing=false after 1262ms
+   188.3s KILL    8690d28c2602 executing=true  
+   189.2s START   8690d28c2602 executing=false after 817ms
+   190.2s KILL    2500382a55e7 executing=true  
+   190.5s UNPAUSE 871cea6d2048 executing=false 
+   191.2s START   2500382a55e7 executing=false after 835ms
+   192.1s KILL    8690d28c2602 executing=true  
+   193.1s START   8690d28c2602 executing=false after 884ms
+   194.0s KILL    6eb6ce2c5383 executing=true  
+   195.3s START   6eb6ce2c5383 executing=false after 1195ms
+   195.6s KILL    871cea6d2048 executing=true  
+   197.0s START   871cea6d2048 executing=false after 1242ms
+   197.8s KILL    871cea6d2048 executing=true  
+   198.5s PAUSE   e3adb402ddbb executing=true  for 8000ms
+   199.0s START   871cea6d2048 executing=false after 1096ms
+   199.4s KILL    c47f8fad68a9 executing=true  
+   200.1s START   c47f8fad68a9 executing=false after 608ms
+   201.9s KILL    c47f8fad68a9 executing=true  
+   203.0s START   c47f8fad68a9 executing=false after 1061ms
+   204.5s KILL    6eb6ce2c5383 executing=true  
+   205.5s START   6eb6ce2c5383 executing=false after 863ms
+   206.3s KILL    871cea6d2048 executing=true  
+   206.5s UNPAUSE e3adb402ddbb executing=false 
+   207.4s START   871cea6d2048 executing=false after 939ms
+   208.7s KILL    6eb6ce2c5383 executing=true  
+   210.3s START   6eb6ce2c5383 executing=false after 1470ms
+   210.9s KILL    871cea6d2048 executing=true  
+   212.1s START   871cea6d2048 executing=false after 1027ms
+   212.7s KILL    871cea6d2048 executing=true  
+   213.0s PAUSE   5f0cd3841e9b executing=true  for 8000ms
+   213.5s START   871cea6d2048 executing=false after 619ms
+   215.1s KILL    b78e7632249a executing=true  
+   216.0s START   b78e7632249a executing=false after 817ms
+   217.7s KILL    6eb6ce2c5383 executing=true  
+   218.6s START   6eb6ce2c5383 executing=false after 804ms
+   220.2s KILL    6eb6ce2c5383 executing=true  
+   221.0s START   6eb6ce2c5383 executing=false after 657ms
+   221.0s UNPAUSE 5f0cd3841e9b executing=false 
+   223.0s KILL    c47f8fad68a9 executing=true  
+   224.4s START   c47f8fad68a9 executing=false after 1276ms
+   225.4s KILL    c47f8fad68a9 executing=false 
+   226.9s START   c47f8fad68a9 executing=false after 1355ms
+   227.4s KILL    5f0cd3841e9b executing=true  
+   228.0s START   5f0cd3841e9b executing=false after 530ms
+   229.1s KILL    5f0cd3841e9b executing=true  
+   230.2s START   5f0cd3841e9b executing=false after 980ms
+   231.8s KILL    6eb6ce2c5383 executing=true  
+   232.3s PAUSE_MISSED 2500382a55e7 executing=false worker was idle when the pause landed
+   233.0s PAUSE_MISSED 2500382a55e7 executing=false worker was idle when the pause landed
+   233.3s START   6eb6ce2c5383 executing=false after 1375ms
+   233.5s PAUSE   e3adb402ddbb executing=true  for 8000ms
+   234.4s KILL    2500382a55e7 executing=true  
+   235.9s START   2500382a55e7 executing=false after 1400ms
+   236.3s KILL    5f0cd3841e9b executing=true  
+   237.6s START   5f0cd3841e9b executing=false after 1151ms
+   238.2s KILL    b78e7632249a executing=true  
+   239.5s START   b78e7632249a executing=false after 1260ms
+   239.7s KILL    2500382a55e7 executing=true  
+   240.6s START   2500382a55e7 executing=false after 852ms
+   241.3s KILL    8690d28c2602 executing=true  
+   241.6s UNPAUSE e3adb402ddbb executing=false 
+   242.9s START   8690d28c2602 executing=false after 1460ms
+   243.7s KILL    2500382a55e7 executing=true  
+   245.0s START   2500382a55e7 executing=false after 1193ms
+   245.7s KILL    b78e7632249a executing=true  
+   247.0s START   b78e7632249a executing=false after 1175ms
+   247.7s KILL    c47f8fad68a9 executing=true  
+   248.7s START   c47f8fad68a9 executing=false after 861ms
+   249.5s KILL    5f0cd3841e9b executing=true  
+   250.5s START   5f0cd3841e9b executing=false after 913ms
+   251.9s KILL    5f0cd3841e9b executing=true  
+   252.1s PAUSE_MISSED 871cea6d2048 executing=false worker was idle when the pause landed
+   252.7s PAUSE   2500382a55e7 executing=true  for 8000ms
+   252.8s START   5f0cd3841e9b executing=false after 739ms
+   253.5s KILL    5f0cd3841e9b executing=true  
+   254.8s START   5f0cd3841e9b executing=false after 1183ms
+   255.9s KILL    8690d28c2602 executing=true  
+   257.3s START   8690d28c2602 executing=false after 1258ms
+   257.6s KILL    871cea6d2048 executing=true  
+   258.4s START   871cea6d2048 executing=false after 735ms
+   259.4s KILL    6eb6ce2c5383 executing=true  
+   260.4s START   6eb6ce2c5383 executing=false after 895ms
+   260.7s UNPAUSE 2500382a55e7 executing=false 
+   261.8s KILL    871cea6d2048 executing=true  
+   262.4s START   871cea6d2048 executing=false after 508ms
+   263.6s KILL    871cea6d2048 executing=true  
+   263.9s PAUSE   c47f8fad68a9 executing=true  for 8000ms
+   265.2s START   871cea6d2048 executing=false after 1418ms
+   265.4s KILL    871cea6d2048 executing=true  
+   266.3s START   871cea6d2048 executing=false after 770ms
+   267.0s KILL    e3adb402ddbb executing=true  
+   267.6s START   e3adb402ddbb executing=false after 519ms
+   269.3s KILL    e3adb402ddbb executing=true  
+   270.3s START   e3adb402ddbb executing=false after 862ms
+   271.5s KILL    871cea6d2048 executing=true  
+   272.0s UNPAUSE c47f8fad68a9 executing=false 
+   272.2s START   871cea6d2048 executing=false after 604ms
+   273.7s KILL    c47f8fad68a9 executing=true  
+   275.1s START   c47f8fad68a9 executing=false after 1264ms
+   276.2s KILL    c47f8fad68a9 executing=true  
+   277.7s START   c47f8fad68a9 executing=false after 1403ms
+   278.3s KILL    c47f8fad68a9 executing=true  
+   279.6s START   c47f8fad68a9 executing=false after 1135ms
+   279.9s KILL    5f0cd3841e9b executing=true  
+   280.8s START   5f0cd3841e9b executing=false after 776ms
+   282.0s PAUSE   2500382a55e7 executing=true  for 8000ms
+   282.0s KILL    b78e7632249a executing=true  
+   282.8s START   b78e7632249a executing=false after 683ms
+   283.8s KILL    b78e7632249a executing=true  
+   285.3s START   b78e7632249a executing=false after 1344ms
+   285.8s KILL    b78e7632249a executing=true  
+   287.4s START   b78e7632249a executing=false after 1450ms
+   287.9s KILL    e3adb402ddbb executing=true  
+   289.4s START   e3adb402ddbb executing=false after 1380ms
+   290.0s UNPAUSE 2500382a55e7 executing=false 
+   290.1s KILL    5f0cd3841e9b executing=false 
+   290.8s START   5f0cd3841e9b executing=false after 514ms
+   292.4s KILL    871cea6d2048 executing=true  
+   293.7s START   871cea6d2048 executing=false after 1088ms
+   294.4s KILL    2500382a55e7 executing=true  
+   295.5s START   2500382a55e7 executing=false after 989ms
+   296.1s KILL    e3adb402ddbb executing=true  
+   296.8s START   e3adb402ddbb executing=false after 640ms
+   298.4s KILL    2500382a55e7 executing=true  
+   299.2s START   2500382a55e7 executing=false after 599ms
+   300.8s PAUSE   871cea6d2048 executing=true  for 8000ms
+   300.8s KILL    e3adb402ddbb executing=true  
+   302.1s START   e3adb402ddbb executing=false after 1173ms
+   303.4s KILL    5f0cd3841e9b executing=true  
+   304.1s START   5f0cd3841e9b executing=false after 517ms
+   305.7s KILL    2500382a55e7 executing=true  
+   306.7s START   2500382a55e7 executing=false after 909ms
+   308.4s KILL    e3adb402ddbb executing=true  
+   308.8s UNPAUSE 871cea6d2048 executing=false 
+   309.6s START   e3adb402ddbb executing=false after 1073ms
+   311.1s KILL    e3adb402ddbb executing=true  
+   311.9s START   e3adb402ddbb executing=false after 742ms
+   312.3s PAUSE   e3adb402ddbb executing=true  for 8000ms
+   313.8s KILL    6eb6ce2c5383 executing=true  
+   314.7s START   6eb6ce2c5383 executing=false after 807ms
+   316.0s KILL    c47f8fad68a9 executing=true  
+   316.7s START   c47f8fad68a9 executing=false after 550ms
+   318.5s KILL    c47f8fad68a9 executing=true  
+   319.9s START   c47f8fad68a9 executing=false after 1325ms
+   320.4s UNPAUSE e3adb402ddbb executing=false 
+   321.0s KILL    2500382a55e7 executing=true  
+   322.6s START   2500382a55e7 executing=false after 1288ms
+   323.3s KILL    5f0cd3841e9b executing=true  
+   324.9s START   5f0cd3841e9b executing=false after 1470ms
+   326.0s KILL    e3adb402ddbb executing=true  
+   326.7s START   e3adb402ddbb executing=false after 525ms
+   327.6s PAUSE   c47f8fad68a9 executing=true  for 8000ms
+   328.4s KILL    5f0cd3841e9b executing=true  
+   329.6s START   5f0cd3841e9b executing=false after 1080ms
+   330.9s KILL    5f0cd3841e9b executing=true  
+   332.2s START   5f0cd3841e9b executing=false after 1179ms
+   333.3s KILL    6eb6ce2c5383 executing=true  
+   334.4s START   6eb6ce2c5383 executing=false after 1065ms
+   335.1s KILL    8690d28c2602 executing=true  
+   335.6s UNPAUSE c47f8fad68a9 executing=false 
+   336.0s START   8690d28c2602 executing=false after 827ms
+   337.0s KILL    b78e7632249a executing=false 
+   337.8s START   b78e7632249a executing=false after 688ms
+   338.6s KILL    6eb6ce2c5383 executing=false 
+   340.3s KILL    e3adb402ddbb executing=true  
+   340.3s START   6eb6ce2c5383 executing=false after 1487ms
+   341.7s START   e3adb402ddbb executing=false after 1307ms
+   341.9s KILL    8690d28c2602 executing=true  
+   343.0s PAUSE_MISSED c47f8fad68a9 executing=false worker was idle when the pause landed
+   343.3s START   8690d28c2602 executing=false after 1339ms
+   343.5s KILL    5f0cd3841e9b executing=true  
+   343.6s PAUSE   2500382a55e7 executing=true  for 8000ms
+   344.3s START   5f0cd3841e9b executing=false after 664ms
+   345.5s KILL    e3adb402ddbb executing=true  
+   346.2s START   e3adb402ddbb executing=false after 599ms
+   347.1s KILL    8690d28c2602 executing=true  
+   347.8s START   8690d28c2602 executing=false after 590ms
+   348.7s KILL    e3adb402ddbb executing=true  
+   349.7s START   e3adb402ddbb executing=false after 807ms
+   351.4s KILL    8690d28c2602 executing=true  
+   351.6s UNPAUSE 2500382a55e7 executing=false 
+   352.1s START   8690d28c2602 executing=false after 517ms
+   354.1s KILL    8690d28c2602 executing=true  
+   355.1s PAUSE_MISSED 5f0cd3841e9b executing=false worker was idle when the pause landed
+   355.7s START   8690d28c2602 executing=false after 1388ms
+   355.7s PAUSE   c47f8fad68a9 executing=true  for 8000ms
+   356.3s KILL    e3adb402ddbb executing=true  
+   357.2s START   e3adb402ddbb executing=false after 784ms
+   358.6s KILL    5f0cd3841e9b executing=true  
+   359.4s START   5f0cd3841e9b executing=false after 655ms
+   360.6s KILL    e3adb402ddbb executing=true  
+   361.6s START   e3adb402ddbb executing=false after 823ms
+   363.2s KILL    e3adb402ddbb executing=true  
+   363.7s UNPAUSE c47f8fad68a9 executing=false 
+   364.0s START   e3adb402ddbb executing=false after 753ms
+   365.9s KILL    5f0cd3841e9b executing=true  
+   366.8s START   5f0cd3841e9b executing=false after 831ms
+   367.6s KILL    c47f8fad68a9 executing=false 
+   368.6s START   c47f8fad68a9 executing=false after 856ms
+   369.2s PAUSE   5f0cd3841e9b executing=true  for 8000ms
+   370.4s KILL    e3adb402ddbb executing=true  
+   371.7s START   e3adb402ddbb executing=false after 1256ms
+   372.6s KILL    b78e7632249a executing=true  
+   373.5s START   b78e7632249a executing=false after 719ms
+   374.3s KILL    e3adb402ddbb executing=true  
+   375.3s START   e3adb402ddbb executing=false after 782ms
+   376.3s KILL    8690d28c2602 executing=true  
+   377.0s START   8690d28c2602 executing=false after 556ms
+   377.2s UNPAUSE 5f0cd3841e9b executing=false 
+   378.1s KILL    871cea6d2048 executing=true  
+   379.0s START   871cea6d2048 executing=false after 834ms
+   380.6s KILL    8690d28c2602 executing=true  
+   382.0s START   8690d28c2602 executing=false after 1293ms
+   382.9s KILL    b78e7632249a executing=true  
+   383.8s START   b78e7632249a executing=false after 762ms
+   383.9s PAUSE   5f0cd3841e9b executing=true  for 8000ms
+   385.1s KILL    c47f8fad68a9 executing=true  
+   386.7s START   c47f8fad68a9 executing=false after 1352ms
+   387.6s KILL    c47f8fad68a9 executing=true  
+   389.1s START   c47f8fad68a9 executing=false after 1379ms
+   390.2s KILL    8690d28c2602 executing=true  
+   391.0s START   8690d28c2602 executing=false after 611ms
+   391.9s UNPAUSE 5f0cd3841e9b executing=false 
+   392.2s KILL    871cea6d2048 executing=true  
+   393.4s START   871cea6d2048 executing=false after 1073ms
+   394.9s KILL    871cea6d2048 executing=true  
+   395.6s START   871cea6d2048 executing=false after 599ms
+   396.6s KILL    c47f8fad68a9 executing=true  
+   397.9s START   c47f8fad68a9 executing=false after 1118ms
+   398.6s KILL    871cea6d2048 executing=true  
+   399.7s START   871cea6d2048 executing=false after 981ms
+   400.8s KILL    c47f8fad68a9 executing=true  
+   401.9s START   c47f8fad68a9 executing=false after 980ms
+   402.2s PAUSE   5f0cd3841e9b executing=true  for 8000ms
+   402.4s KILL    2500382a55e7 executing=true  
+   403.7s START   2500382a55e7 executing=false after 1260ms
+   405.0s KILL    e3adb402ddbb executing=true  
+   405.9s START   e3adb402ddbb executing=false after 733ms
+   407.2s KILL    e3adb402ddbb executing=true  
+   408.3s START   e3adb402ddbb executing=false after 1005ms
+   408.7s KILL    8690d28c2602 executing=true  
+   410.1s START   8690d28c2602 executing=false after 1303ms
+   410.3s UNPAUSE 5f0cd3841e9b executing=false 
+   411.4s KILL    6eb6ce2c5383 executing=true  
+   412.8s START   6eb6ce2c5383 executing=false after 1306ms
+   413.4s PAUSE   871cea6d2048 executing=true  for 8000ms
+   413.8s KILL    c47f8fad68a9 executing=true  
+   415.1s START   c47f8fad68a9 executing=false after 1142ms
+   415.8s KILL    c47f8fad68a9 executing=true  
+   416.9s START   c47f8fad68a9 executing=false after 984ms
+   417.4s KILL    8690d28c2602 executing=true  
+   418.7s START   8690d28c2602 executing=false after 1215ms
+   419.7s KILL    6eb6ce2c5383 executing=true  
+   421.0s START   6eb6ce2c5383 executing=false after 1178ms
+   421.5s UNPAUSE 871cea6d2048 executing=false 
+   421.7s KILL    6eb6ce2c5383 executing=true  
+   422.8s START   6eb6ce2c5383 executing=false after 985ms
+   424.0s KILL    c47f8fad68a9 executing=true  
+   425.6s START   c47f8fad68a9 executing=false after 1494ms
+   426.7s KILL    871cea6d2048 executing=true  
+   428.3s START   871cea6d2048 executing=false after 1475ms
+   428.4s KILL    e3adb402ddbb executing=true  
+   429.5s START   e3adb402ddbb executing=false after 937ms
+   429.6s PAUSE   e3adb402ddbb executing=true  for 8000ms
+   430.5s KILL    8690d28c2602 executing=true  
+   431.6s START   8690d28c2602 executing=false after 794ms
+   433.2s KILL    2500382a55e7 executing=true  
+   434.5s START   2500382a55e7 executing=false after 1218ms
+   435.9s KILL    2500382a55e7 executing=true  
+   437.5s START   2500382a55e7 executing=false after 1434ms
+   437.6s KILL    2500382a55e7 executing=true  
+   437.6s UNPAUSE e3adb402ddbb executing=false 
+   438.7s START   2500382a55e7 executing=false after 1015ms
+   439.3s KILL    e3adb402ddbb executing=true  
+   440.5s START   e3adb402ddbb executing=false after 1128ms
+   441.2s KILL    8690d28c2602 executing=true  
+   442.4s START   8690d28c2602 executing=false after 1136ms
+   442.9s KILL    e3adb402ddbb executing=true  
+   443.1s PAUSE   c47f8fad68a9 executing=true  for 8000ms
+   444.0s START   e3adb402ddbb executing=false after 962ms
+   445.1s KILL    b78e7632249a executing=true  
+   446.7s START   b78e7632249a executing=false after 1448ms
+   447.6s KILL    2500382a55e7 executing=true  
+   448.4s START   2500382a55e7 executing=false after 693ms
+   449.8s KILL    8690d28c2602 executing=true  
+   450.8s START   8690d28c2602 executing=false after 856ms
+   451.1s UNPAUSE c47f8fad68a9 executing=false 
+   452.0s KILL    b78e7632249a executing=true  
+   453.4s START   b78e7632249a executing=false after 1318ms
+   454.2s KILL    6eb6ce2c5383 executing=true  
+   455.8s START   6eb6ce2c5383 executing=false after 1498ms
+   456.6s KILL    2500382a55e7 executing=true  
+   457.3s START   2500382a55e7 executing=false after 640ms
+   459.1s KILL    6eb6ce2c5383 executing=true  
+   459.9s START   6eb6ce2c5383 executing=false after 689ms
+   461.6s PAUSE   871cea6d2048 executing=true  for 8000ms
+   461.8s KILL    2500382a55e7 executing=true  
+   462.9s START   2500382a55e7 executing=false after 1034ms
+   464.3s KILL    8690d28c2602 executing=true  
+   465.6s START   8690d28c2602 executing=false after 1105ms
+   466.8s KILL    c47f8fad68a9 executing=true  
+   467.5s START   c47f8fad68a9 executing=false after 632ms
+   468.7s KILL    e3adb402ddbb executing=true  
+   469.6s UNPAUSE 871cea6d2048 executing=false 
+   469.9s START   e3adb402ddbb executing=false after 1108ms
+   470.5s KILL    b78e7632249a executing=true  
+   471.7s START   b78e7632249a executing=false after 1159ms
+   472.4s PAUSE   b78e7632249a executing=true  for 8000ms
+   472.4s KILL    c47f8fad68a9 executing=true  
+   473.6s START   c47f8fad68a9 executing=false after 1051ms
+   474.4s KILL    871cea6d2048 executing=true  
+   475.2s START   871cea6d2048 executing=false after 709ms
+   476.7s KILL    c47f8fad68a9 executing=true  
+   478.1s START   c47f8fad68a9 executing=false after 1283ms
+   478.9s KILL    e3adb402ddbb executing=true  
+   479.8s START   e3adb402ddbb executing=false after 709ms
+   480.4s UNPAUSE b78e7632249a executing=false 
+   481.5s KILL    b78e7632249a executing=true  
+   482.9s START   b78e7632249a executing=false after 1336ms
+   483.7s KILL    8690d28c2602 executing=true  
+   484.9s START   8690d28c2602 executing=false after 1061ms
+   486.3s KILL    b78e7632249a executing=true  
+   487.2s START   b78e7632249a executing=false after 781ms
+   487.9s PAUSE   b78e7632249a executing=true  for 8000ms
+   487.9s KILL    2500382a55e7 executing=true  
+   489.2s START   2500382a55e7 executing=false after 1151ms
+   490.4s KILL    e3adb402ddbb executing=true  
+   491.3s START   e3adb402ddbb executing=false after 797ms
+   492.8s KILL    5f0cd3841e9b executing=true  
+   494.1s START   5f0cd3841e9b executing=false after 1226ms
+   494.6s KILL    e3adb402ddbb executing=true  
+   495.3s START   e3adb402ddbb executing=false after 532ms
+   495.9s UNPAUSE b78e7632249a executing=false 
+   496.9s KILL    6eb6ce2c5383 executing=true  
+   497.7s START   6eb6ce2c5383 executing=false after 660ms
+   499.4s KILL    c47f8fad68a9 executing=true  
+   500.3s START   c47f8fad68a9 executing=false after 810ms
+   501.5s KILL    e3adb402ddbb executing=true  
+   502.5s START   e3adb402ddbb executing=false after 842ms
+   503.5s KILL    871cea6d2048 executing=true  
+   504.9s START   871cea6d2048 executing=false after 1219ms
+   505.5s KILL    8690d28c2602 executing=true  
+   506.3s PAUSE   b78e7632249a executing=true  for 8000ms
+   507.0s START   8690d28c2602 executing=false after 1422ms
+   507.7s KILL    6eb6ce2c5383 executing=true  
+   508.4s START   6eb6ce2c5383 executing=false after 581ms
+   509.4s KILL    5f0cd3841e9b executing=true  
+   510.2s START   5f0cd3841e9b executing=false after 600ms
+   511.8s KILL    2500382a55e7 executing=true  
+   513.3s START   2500382a55e7 executing=false after 1390ms
+   514.0s KILL    5f0cd3841e9b executing=true  
+   514.4s UNPAUSE b78e7632249a executing=false 
+   515.4s START   5f0cd3841e9b executing=false after 1299ms
+   516.4s KILL    6eb6ce2c5383 executing=true  
+   517.6s START   6eb6ce2c5383 executing=false after 1096ms
+   518.3s KILL    2500382a55e7 executing=false 
+   519.3s START   2500382a55e7 executing=false after 894ms
+   520.1s KILL    e3adb402ddbb executing=true  
+   520.6s PAUSE   c47f8fad68a9 executing=true  for 8000ms
+   520.7s START   e3adb402ddbb executing=false after 535ms
+   521.6s KILL    e3adb402ddbb executing=true  
+   523.2s START   e3adb402ddbb executing=false after 1397ms
+   523.8s KILL    6eb6ce2c5383 executing=true  
+   524.4s START   6eb6ce2c5383 executing=false after 508ms
+   525.4s KILL    8690d28c2602 executing=true  
+   526.7s START   8690d28c2602 executing=false after 1159ms
+   527.8s KILL    b78e7632249a executing=true  
+   528.7s UNPAUSE c47f8fad68a9 executing=false 
+   528.8s START   b78e7632249a executing=false after 925ms
+   530.5s KILL    2500382a55e7 executing=true  
+   531.3s START   2500382a55e7 executing=false after 723ms
+   532.6s KILL    b78e7632249a executing=true  
+   534.0s START   b78e7632249a executing=false after 1225ms
+   534.4s KILL    6eb6ce2c5383 executing=true  
+   534.6s PAUSE   2500382a55e7 executing=true  for 8000ms
+   535.0s START   6eb6ce2c5383 executing=false after 502ms
+   537.1s KILL    8690d28c2602 executing=true  
+   538.0s START   8690d28c2602 executing=false after 757ms
+   539.1s KILL    8690d28c2602 executing=true  
+   540.6s START   8690d28c2602 executing=false after 1390ms
+   540.9s KILL    871cea6d2048 executing=true  
+   542.0s START   871cea6d2048 executing=false after 989ms
+   542.6s UNPAUSE 2500382a55e7 executing=false 
+   542.8s KILL    6eb6ce2c5383 executing=true  
+   543.6s START   6eb6ce2c5383 executing=false after 702ms
+   544.4s KILL    6eb6ce2c5383 executing=true  
+   546.0s START   6eb6ce2c5383 executing=false after 1439ms
+   546.8s KILL    b78e7632249a executing=true  
+   547.8s START   b78e7632249a executing=false after 923ms
+   549.3s KILL    6eb6ce2c5383 executing=true  
+   550.4s START   6eb6ce2c5383 executing=false after 1054ms
+   551.2s PAUSE   8690d28c2602 executing=true  for 8000ms
+   551.3s KILL    5f0cd3841e9b executing=true  
+   552.3s START   5f0cd3841e9b executing=false after 890ms
+   553.4s KILL    6eb6ce2c5383 executing=true  
+   555.0s START   6eb6ce2c5383 executing=false after 1418ms
+   555.5s KILL    c47f8fad68a9 executing=true  
+   556.1s START   c47f8fad68a9 executing=false after 546ms
+   557.6s KILL    c47f8fad68a9 executing=true  
+   559.0s START   c47f8fad68a9 executing=false after 1239ms
+   559.3s UNPAUSE 8690d28c2602 executing=false 
+   559.9s KILL    2500382a55e7 executing=true  
+   561.0s START   2500382a55e7 executing=false after 981ms
+   562.0s KILL    2500382a55e7 executing=true  
+   563.4s PAUSE   b78e7632249a executing=true  for 8000ms
+   563.5s START   2500382a55e7 executing=false after 1409ms
+   564.5s KILL    2500382a55e7 executing=true  
+   565.3s START   2500382a55e7 executing=false after 681ms
+   566.4s KILL    6eb6ce2c5383 executing=true  
+   567.3s START   6eb6ce2c5383 executing=false after 798ms
+   569.0s KILL    2500382a55e7 executing=true  
+   570.1s START   2500382a55e7 executing=false after 983ms
+   570.7s KILL    c47f8fad68a9 executing=true  
+   571.5s UNPAUSE b78e7632249a executing=false 
+   571.5s START   c47f8fad68a9 executing=false after 750ms
+   572.8s KILL    871cea6d2048 executing=false 
+   574.3s START   871cea6d2048 executing=false after 1384ms
+   574.9s KILL    c47f8fad68a9 executing=true  
+   576.5s START   c47f8fad68a9 executing=false after 1459ms
+   576.7s KILL    6eb6ce2c5383 executing=true  
+   577.5s START   6eb6ce2c5383 executing=false after 682ms
+   579.1s KILL    6eb6ce2c5383 executing=true  
+   580.5s START   6eb6ce2c5383 executing=false after 1283ms
+   580.7s KILL    b78e7632249a executing=true  
+   581.3s START   b78e7632249a executing=false after 553ms
+   581.9s PAUSE   e3adb402ddbb executing=true  for 8000ms
+   583.2s KILL    5f0cd3841e9b executing=true  
+   584.1s START   5f0cd3841e9b executing=false after 741ms
+   585.3s KILL    8690d28c2602 executing=true  
+   586.8s START   8690d28c2602 executing=false after 1474ms
+   587.1s KILL    8690d28c2602 executing=true  
+   587.9s START   8690d28c2602 executing=false after 638ms
+   589.2s KILL    b78e7632249a executing=true  
+   590.0s UNPAUSE e3adb402ddbb executing=false 
+   590.6s START   b78e7632249a executing=false after 1289ms
+   591.2s KILL    5f0cd3841e9b executing=true  
+   592.1s START   5f0cd3841e9b executing=false after 847ms
+   593.3s KILL    5f0cd3841e9b executing=true  
+   594.2s START   5f0cd3841e9b executing=false after 803ms
+   595.4s KILL    e3adb402ddbb executing=true  
+   596.8s START   e3adb402ddbb executing=false after 1289ms
+   597.6s KILL    6eb6ce2c5383 executing=true  
+   598.7s START   6eb6ce2c5383 executing=false after 946ms
+   599.2s KILL    871cea6d2048 executing=true  
+   600.3s START   871cea6d2048 executing=false after 1010ms
+   601.2s PAUSE   2500382a55e7 executing=true  for 8000ms
+   601.5s KILL    c47f8fad68a9 executing=true  
+   602.5s START   c47f8fad68a9 executing=false after 857ms
+   603.9s KILL    e3adb402ddbb executing=true  
+   605.3s START   e3adb402ddbb executing=false after 1227ms
+   606.2s KILL    8690d28c2602 executing=true  
+   607.2s START   8690d28c2602 executing=false after 800ms
+   608.6s KILL    871cea6d2048 executing=true  
+   609.2s UNPAUSE 2500382a55e7 executing=false 
+   609.7s START   871cea6d2048 executing=false after 946ms
+   611.3s KILL    871cea6d2048 executing=true  
+   612.8s START   871cea6d2048 executing=false after 1351ms
+   613.3s KILL    2500382a55e7 executing=true  
+   614.2s START   2500382a55e7 executing=false after 780ms
+   614.9s PAUSE   e3adb402ddbb executing=true  for 8000ms
+   615.6s KILL    b78e7632249a executing=true  
+   616.8s START   b78e7632249a executing=false after 1047ms
+   617.6s KILL    6eb6ce2c5383 executing=true  
+   618.5s START   6eb6ce2c5383 executing=false after 783ms
+   619.9s KILL    6eb6ce2c5383 executing=true  
+   621.0s START   6eb6ce2c5383 executing=false after 953ms
+   621.5s KILL    871cea6d2048 executing=true  
+   622.1s START   871cea6d2048 executing=false after 501ms
+   623.0s UNPAUSE e3adb402ddbb executing=false 
+   623.9s KILL    6eb6ce2c5383 executing=true  
+   625.0s START   6eb6ce2c5383 executing=false after 932ms
+   625.8s KILL    8690d28c2602 executing=true  
+   626.6s START   8690d28c2602 executing=false after 637ms
+   627.1s PAUSE   5f0cd3841e9b executing=true  for 8000ms
+   628.5s KILL    e3adb402ddbb executing=false 
+   629.9s START   e3adb402ddbb executing=false after 1301ms
+   630.8s KILL    8690d28c2602 executing=true  
+   632.0s START   8690d28c2602 executing=false after 1070ms
+   632.9s KILL    e3adb402ddbb executing=true  
+   633.6s START   e3adb402ddbb executing=false after 623ms
+   634.8s KILL    6eb6ce2c5383 executing=true  
+   635.2s UNPAUSE 5f0cd3841e9b executing=false 
+   636.4s START   6eb6ce2c5383 executing=false after 1474ms
+   636.5s KILL    e3adb402ddbb executing=true  
+   637.9s START   e3adb402ddbb executing=false after 1255ms
+   638.1s KILL    871cea6d2048 executing=true  
+   639.2s START   871cea6d2048 executing=false after 992ms
+   640.3s KILL    b78e7632249a executing=true  
+   640.6s PAUSE   6eb6ce2c5383 executing=true  for 8000ms
+   641.6s START   b78e7632249a executing=false after 1136ms
+   642.3s KILL    2500382a55e7 executing=true  
+   643.9s START   2500382a55e7 executing=false after 1439ms
+   644.3s KILL    2500382a55e7 executing=true  
+   645.8s START   2500382a55e7 executing=false after 1292ms
+   647.0s KILL    b78e7632249a executing=true  
+   647.7s START   b78e7632249a executing=false after 568ms
+   648.7s UNPAUSE 6eb6ce2c5383 executing=false 
+   649.5s KILL    b78e7632249a executing=true  
+   650.2s START   b78e7632249a executing=false after 651ms
+   651.0s KILL    8690d28c2602 executing=true  
+   652.0s START   8690d28c2602 executing=false after 868ms
+   653.2s KILL    871cea6d2048 executing=true  
+   654.7s START   871cea6d2048 executing=false after 1353ms
+   655.9s KILL    b78e7632249a executing=true  
+   656.0s PAUSE   5f0cd3841e9b executing=true  for 8000ms
+   657.3s START   b78e7632249a executing=false after 1271ms
+   658.5s KILL    871cea6d2048 executing=true  
+   660.0s START   871cea6d2048 executing=false after 1375ms
+   660.4s KILL    2500382a55e7 executing=true  
+   661.2s START   2500382a55e7 executing=false after 717ms
+   662.8s KILL    2500382a55e7 executing=true  
+   664.0s START   2500382a55e7 executing=false after 1011ms
+   664.1s UNPAUSE 5f0cd3841e9b executing=false 
+   664.9s KILL    e3adb402ddbb executing=true  
+   666.2s START   e3adb402ddbb executing=false after 1136ms
+   667.3s KILL    e3adb402ddbb executing=true  
+   668.8s START   e3adb402ddbb executing=false after 1359ms
+   670.0s KILL    e3adb402ddbb executing=true  
+   671.5s START   e3adb402ddbb executing=false after 1419ms
+   671.6s KILL    5f0cd3841e9b executing=true  
+   672.7s START   5f0cd3841e9b executing=false after 974ms
+   674.2s KILL    6eb6ce2c5383 executing=true  
+   675.3s PAUSE   5f0cd3841e9b executing=true  for 8000ms
+   675.6s START   6eb6ce2c5383 executing=false after 1294ms
+   676.8s KILL    6eb6ce2c5383 executing=true  
+   677.6s START   6eb6ce2c5383 executing=false after 699ms
+   679.4s KILL    b78e7632249a executing=false 
+   679.8s UNPAUSE 5f0cd3841e9b executing=false 
+   680.0s START   b78e7632249a executing=false heal
+
+==== INVARIANTS ============================================================
+I1   PASS no accepted job lost, no job without a submitted key                                            offending=0
+I2   PASS at most one effect per job                                                                      offending=0
+I3   PASS succeeded <=> exactly one effect; failed and cancelled have none                                offending=0
+I4   PASS no job left queued or running                                                                   offending=0
+I5   PASS cancel responses match final states                                                             offending=0
+I6   PASS one job id per key across all responses                                                         offending=0
+I7   PASS effect written by the final owner's recorded run; cancelled jobs only ran with older tokens     offending=0
+I8   PASS attempts <= max; failed jobs used all attempts                                                  offending=0
+I9   PASS audit log has only legal transitions                                                            offending=0
+I10  PASS no lease further than now() + 2 x lease (664 samples, 0 failed)                                 offending=0
+
+==== COUNTERS ==============================================================
+jobs total                                    10000
+jobs succeeded                                9687
+jobs failed                                   4
+jobs failed by lease loss (innocent)          3
+jobs cancelled                                309
+kills                                         314
+kills of an executing worker                  300
+pauses                                        44
+pauses of an executing worker                 44
+pause attempts that missed (worker idle)      5
+executions                                    10726
+executions interrupted (worker died)          258
+executions fenced (zombie or lost lease)      36
+executions stopped by cancel                  262
+executions failed (emulated error)            483
+jobs with more than one execution             691
+cancels that hit a queued job                 19
+cancels that hit a running job                290
+cancel requests sent                          898
+cancel answered 409 job_finished              589
+targeted cancels sent                         402
+creates answered 201                          10000
+idempotent replays answered 200               4862
+concurrent duplicates answered 200            2312
+conflicting resends answered 409              83
+requests timed out (unknown)                  0
+requests answered 5xx                         0
+run seconds                                   670
+throughput terminal jobs per second           14.9
+
+==== VERDICT ===============================================================
+PASS: all invariants held and the faults reached the dangerous paths
+
+exit code: 0   raw log: runs/20261110T142159Z-none-seed1.log

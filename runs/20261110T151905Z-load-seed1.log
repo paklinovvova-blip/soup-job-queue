@@ -1,0 +1,90 @@
+
+==== RUN ===================================================================
+config:   Config[mode=load, mutant=none, jobs=10000, rate=15.0, seed=1, workers=8, killEvery=PT2S, pauseEvery=PT15S, lease=PT5S, timeout=PT15M, faultWindow=0.95, fresh=true, dryRun=false, api=http://localhost:8080, dbUrl=jdbc:postgresql://localhost:55432/queue, dbUser=queue, dbPassword=queue, runsDir=runs, loadRps=100, loadDuration=PT5M, loadMix=default]
+revision: 151c030
+note:     the seed fixes the workload and the fault schedule; thread scheduling and timing are not reproducible
+[    0.1s] docker compose down -v
+[    2.2s] docker compose up --scale worker=8 (QUEUE_MUTANT=none)
+[   12.7s] workers started: 8 of 8
+[   12.7s] schema check: effects primary key present=true, expected=true
+
+==== LOAD ==================================================================
+[   12.7s] open loop: 100 requests/s for 5m0s, mix 20% create / 60% get / 15% list / 5% cancel
+
+==== LOAD RESULTS ==========================================================
+create  n=6050   p50=   3.2ms p95=   5.3ms p99=   9.1ms max=   81.0ms errors=0
+get     n=17933  p50=   1.9ms p95=   3.6ms p99=   6.7ms max=   87.5ms errors=0
+list    n=4465   p50=   2.7ms p95=   4.4ms p99=   8.8ms max=  102.4ms errors=0
+cancel  n=1552   p50=   2.6ms p95=   4.6ms p99=   6.9ms max=   18.7ms errors=0
+all     n=30000  p50=   2.2ms p95=   4.5ms p99=   7.7ms errors=0 (0.000%) achieved=100.0 req/s
+
+==== QUEUE DEPTH (every 5 s) ===============================================
+    0.0s queued=0       running=0
+    5.0s queued=1       running=4
+   10.1s queued=2       running=6
+   15.1s queued=1       running=4
+   20.1s queued=2       running=1
+   25.2s queued=2       running=5
+   30.2s queued=1       running=8
+   35.2s queued=3       running=7
+   40.3s queued=0       running=8
+   45.3s queued=1       running=5
+   50.3s queued=3       running=8
+   55.4s queued=9       running=8
+   60.4s queued=2       running=8
+   65.4s queued=1       running=6
+   70.5s queued=4       running=6
+   75.5s queued=1       running=7
+   80.5s queued=9       running=8
+   85.5s queued=1       running=6
+   90.6s queued=2       running=7
+   95.6s queued=9       running=8
+  100.6s queued=0       running=6
+  105.6s queued=0       running=5
+  110.7s queued=3       running=7
+  115.7s queued=0       running=2
+  120.7s queued=2       running=4
+  125.7s queued=4       running=7
+  130.8s queued=0       running=7
+  135.8s queued=2       running=4
+  140.9s queued=3       running=5
+  145.9s queued=0       running=6
+  150.9s queued=2       running=8
+  156.0s queued=5       running=7
+  161.0s queued=1       running=8
+  166.0s queued=2       running=8
+  171.0s queued=5       running=8
+  176.1s queued=3       running=7
+  181.1s queued=2       running=8
+  186.1s queued=3       running=7
+  191.2s queued=1       running=5
+  196.2s queued=3       running=5
+  201.2s queued=1       running=6
+  206.3s queued=6       running=6
+  211.3s queued=4       running=8
+  216.3s queued=2       running=7
+  221.3s queued=4       running=8
+  226.4s queued=1       running=7
+  231.4s queued=0       running=6
+  236.4s queued=0       running=4
+  241.5s queued=4       running=6
+  246.5s queued=4       running=7
+  251.5s queued=2       running=6
+  256.6s queued=1       running=6
+  261.6s queued=3       running=6
+  266.7s queued=0       running=5
+  271.7s queued=5       running=7
+  276.8s queued=5       running=7
+  281.8s queued=3       running=8
+  286.8s queued=4       running=8
+  291.9s queued=1       running=3
+  296.9s queued=8       running=8
+  301.9s queued=0       running=0
+
+==== VERDICT AGAINST PRE-REGISTERED CRITERIA ===============================
+p99 latency < 200 ms            OK   (7.7 ms)
+errors (5xx + timeouts) < 0.1%  OK   (0.000%)
+queue depth not growing (3 min) OK   (0.06 jobs/s growth, allowed 1.01; creates 20.2/s)
+SHIP at this load and mix
+
+exit code: 0   raw log: runs/20261110T151905Z-load-seed1.log

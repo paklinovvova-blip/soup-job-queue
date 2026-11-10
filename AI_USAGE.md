@@ -136,6 +136,17 @@ were explained. How each one is verified is listed next to it.
 
 More entries are added as they come up during implementation.
 
+## Evidence runs and written deliverables
+
+- The AI wrote and started `scripts/evidence-runs.sh`: 3 normal runs, 2 mutants and 2 load runs, about 70 minutes.
+  All were kept, development runs included (`runs/dev`). Nothing was re-run to get a better result.
+- The AI drafted `docs/design.md`, `docs/chaos.md`, `docs/silent-failures.md` and `docs/verdict.md` from the run logs.
+  Every number in them was copied from a log, and each document links the log it comes from.
+- **The verdict's reading of "100 rps" is a choice.** We measured both readings. DON'T SHIP follows from reading "100 rps" as 100 new jobs per second.
+  This is the AI's recommendation, and the author decides.
+- **The paragraph "what surprised me / what still concerns me" in `docs/verdict.md` is an AI draft.** It is marked as
+  such, and the author rewrites it in their own words.
+
 ## Verification log
 
 What I checked, changed or redid myself. Filled in during implementation.

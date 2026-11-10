@@ -5,6 +5,20 @@ when workers are killed with `kill -9`, freeze and come back, clients retry requ
 
 Java 21, Spring Boot 3, plain JDBC (`JdbcTemplate`), Postgres 16, Flyway, Docker Compose.
 
+## Results
+
+| Document | Content |
+|---|---|
+| [`docs/design.md`](docs/design.md) | One-page design note: claiming, dead workers, cancel of a running job, the guarantee and why |
+| [`docs/chaos.md`](docs/chaos.md) | The harness, every run (failed and inconclusive ones included), the counters, what it does not catch |
+| [`docs/silent-failures.md`](docs/silent-failures.md) | Double claim, zombie, cancel/complete race, retry duplicates, isolation, clock skew, and how each is checked |
+| [`docs/verdict.md`](docs/verdict.md) | SHIP / DON'T SHIP at 100 rps, the capacity math, what to fix first |
+| [`runs/`](runs/) | Raw output of every harness run |
+
+Short version: in three 10,000-job chaos runs all ten invariants held, with about 310 `kill -9`, 44 pauses past the lease,
+about 36 fenced zombies and about 260 cancels of running jobs per run. Two seeded bugs were caught.
+At 100 rps of mixed API traffic the p99 latency was 7.7 ms. At 100 new jobs per second, 8 single-job workers fall behind by 75 jobs/s.
+
 ## Run it
 
 ```bash
